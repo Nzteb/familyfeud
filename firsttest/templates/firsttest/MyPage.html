@@ -10,6 +10,7 @@
 
 
     // Boilerplate that lets you access useful oTree template variables from Javascript.
+    // from the docs:
     //<otree-constants>` is used by most of the other webcomponents, so this block is
     //required in any template using the otree-redwood components:
     var oTree = oTree || {};
@@ -30,77 +31,23 @@
 
 
 
-{##}
-{#    // Get the decision component and other-decision element.#}
-{##}
-{#    //i dont know, but this might be the whole redwood-decision.html thing .. e. g. we can access decision.otherDecision#}
-{#    var decision = document.querySelector("redwood-decision");#}
-{##}
-{#    // so we set this to manipulate the html tag with id='other-decision' below in the block contents#}
-{#    var otherDecision = document.getElementById("other-decision");#}
-{##}
-{#    // i try this#}
-{#    var groupDecision = document.getElementById('group-dec')#}
-{##}
-{#    // Log period start/end to the JavaScript console.#}
-{#    document.querySelector("redwood-period").addEventListener('period-start', function(event) {#}
-{#      console.log('period started');#}
-{#    });#}
-{#    document.querySelector("redwood-period").addEventListener('period-end', function(event) {#}
-{#      console.log('period ended');#}
-{#    });#}
-{##}
-{#    // When group decisions changes, update the text of the otherDecision element.#}
-{#    decision.addEventListener('group-decisions-changed', function(event) {#}
-{#      otherDecision.innerText = decision.otherDecision;#}
-{#    });#}
-{##}
-{#    // so i try this to manipulate the inner text of my group-dec tag#}
-{#     decision.addEventListener('group-decisions-changed', function(event) {#}
-{#      groupDecision.innerText = decision.groupDecisions#}
-{#    });#}
-{##}
-{##}
-{##}
-{##}
-{##}
-{#    // Attach this to a button onclick event to set your decision when the button is clicked.#}
-{#    function setDecision(d) {#}
-{#      decision.myDecision = d;#}
-{#    }#}
-{##}
-{##}
-
-
-
-
-    // Delete everything above here
-    // vars
-
-
-
 
     //This function is called when the submitt button is clicked
     // this fills the field where the own submissions are listed
     // I also want that the channel is fired from here...
     function handleGuess() {
-        //TODO i would like to initialize the variables out of the function so that they are not initialized evertime when the function is called
-        //TODO because this happens alot ... i tried, but i couldnt, so i leave them in here for now
+        //TODO initialize the variables out of the function?
         //grap the input of the input form as a variable
          var guessed = document.getElementById('guessField').value;
          var result = document.getElementById('result');
          var guessingChan = document.getElementById("guessingChannel");
 
-
         if (guessed.length < 1) {
-            result.textContent = 'Try a word';
-
+            result.textContent = 'Please type anything';
 
         } else {
             result.textContent = guessed;
             guessingChan.send({word: guessed})
-
-
         }
     }
 
@@ -113,7 +60,7 @@
         //reveive the guess of another player, call it msg
         var setguess =  document.getElementById('otherguess');
         setguess.textContent = event.detail.payload
-        setguess.textContent = 'i sended back but can handle it properly'
+        setguess.textContent = 'At least, the function was called'
 
     }
 
@@ -130,19 +77,6 @@
   {% endblock %}
 
   {% block content %}
-{#    <!-- Include the components on the page -->#}
-{#    <redwood-period></redwood-period>#}
-{#    <redwood-decision></redwood-decision>#}
-{##}
-{#    <p>Other Decision: <span id="other-decision"></span></p>#}
-{#      <p>Group Dec: <span id="group-dec"></span></p>#}
-{##}
-{##}
-{##}
-{#    <button type=button onclick="setDecision(0)">Decision=0</button>#}
-{#    <button type=button onclick="setDecision(1)">Decision=1</button>#}
-
-    <!-- Delete Everything above here -->
 
       <redwood-period></redwood-period>
 
@@ -152,19 +86,20 @@
 	    </redwood-channel>
 
 
+      <redwood-channel
+            id = "group_guesses"
+    		channel="group_guesses"
+            on-event ="other_guesses">
+	    </redwood-channel>
+
+
     	<redwood-channel
             id = 'correct_guessChannel'
     		channel="correct_guess">
 	    </redwood-channel>
 
 
-        <redwood-channel
-            id = "group_guesses"
-    		channel="group_guesses"
-            on-event ="other_guesses">
-	    </redwood-channel>
-
-      <!-- Build up of the page -->
+      <!-- Template of the page -->
 
 
       <!-- Input form -->

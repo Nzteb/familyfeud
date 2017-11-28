@@ -23,10 +23,11 @@ class Constants(BaseConstants):
 class Subsession(BaseSubsession):
 
     def creating_session(self):
-        alist = []
-        alist.append(random.choice(['Apple', 'Banana']))
-        alist.append(random.choice(['Soccer', 'Tennis']))
-        self.session.vars['wordlist'] = alist
+        # alist = []
+        # alist.append(random.choice(['Apple', 'Banana']))
+        # alist.append(random.choice(['Soccer', 'Tennis']))
+        # self.session.vars['wordlist'] = alist
+        pass
 
 
 
@@ -36,15 +37,15 @@ class Group(RedwoodGroup):
 
         print('I went into "_on_guessing_Channel_events_" function...')
         #the guessed value of the event is in form of {word: 'guessed word'}
-        print('this is the message: %s'  %(event.value['word']))
+        print('I received the guess of the player, the guess is: %s'  %(event.value['word']))
         # broadcast the order out to all subjects
-        if event.value['word'] in self.session.vars['wordlist']:
-            self.send("correct_guess", event.value['word'])
+        # if event.value['word'] in self.session.vars['wordlist']:
+        #     self.send("correct_guess", event.value['word'])
 
         #send the guess back, in anycase to list it for the other players
-        self.send('group_guesses', event.value['word'])
-        #TODO: Delete
-        self.send('group_guesses', {'word' : 'hello'})
+        if True:
+            self.send('group_guesses', event.value['word'])
+
 
 
     def period_length(self):
