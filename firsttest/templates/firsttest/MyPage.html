@@ -94,18 +94,28 @@
 
         if (guessed.length < 1) {
             result.textContent = 'Try a word';
-            //alert('try a word');
+
 
         } else {
             result.textContent = guessed;
-            guessingChan.send(guessed)
-            //alert(nameField);
+            guessingChan.send({word: guessed})
+
+
         }
     }
 
-
+    // Call the handle Guess function whenever the submitt button is clicked (then the guess is displayed for the player and sended to the channel)
     var subButton = document.getElementById('subButton');
     subButton.addEventListener('click', handleGuess, false);
+
+    // function that receives the other guesses and modifies the respective html tag to display it
+    function other_guesses(event) {
+        //reveive the guess of another player, call it msg
+        var setguess =  document.getElementById('otherguess');
+        setguess.textContent = event.detail.payload
+        setguess.textContent = 'i sended back but can handle it properly'
+
+    }
 
 
 
@@ -148,7 +158,16 @@
 	    </redwood-channel>
 
 
+        <redwood-channel
+            id = "group_guesses"
+    		channel="group_guesses"
+            on-event ="other_guesses">
+	    </redwood-channel>
 
+      <!-- Build up of the page -->
+
+
+      <!-- Input form -->
         <div class='wrapper'>
         <form id='nameForm'>
             <div class='form-uname'>
@@ -158,16 +177,26 @@
 
         <br><br>
 
-
+        <!-- Submitt input button -->
         <div class='form-sub'>
         <button id='subButton' type='button'>Submitt your guess</button>
         </div>
         </form>
+
         <br> <br>
 
-<div>
-    <p id='result'></p></div>
-</div>
+         <!-- Display the players last guess -->
+        <div>
+            <p id='result'></p></div>
+        </div>
+
+      <br><br>
+
+       <!-- Display guesses of the other players -->
+       <div>
+       Other guess: <p id='otherguess'></p>
+       </div>
+
 
 
 

@@ -4,6 +4,7 @@ from otree.api import (
 )
 from otree_redwood.models import Event, DecisionGroup
 from otree_redwood.models import Group as RedwoodGroup
+import random
 
 author = 'Your name here'
 
@@ -20,17 +21,31 @@ class Constants(BaseConstants):
 
 
 class Subsession(BaseSubsession):
-    pass
+
+    def creating_session(self):
+        alist = []
+        alist.append(random.choice(['Apple', 'Banana']))
+        alist.append(random.choice(['Soccer', 'Tennis']))
+        self.session.vars['wordlist'] = alist
+
 
 
 class Group(RedwoodGroup):
 
     def _on_guessingChannel_event(self, event=None, **kwargs):
-        # probably should verify the event.participant has enough balance/units
-        # to send the order
+
         print('I went into "_on_guessing_Channel_events_" function...')
+        #the guessed value of the event is in form of {word: 'guessed word'}
+        print('this is the message: %s'  %(event.value['word']))
         # broadcast the order out to all subjects
-        self.send("correct_guess", event.value)
+        if event.value['word'] in self.session.vars['wordlist']:
+            self.send("correct_guess", event.value['word'])
+
+        #send the guess back, in anycase to list it for the other players
+        self.send('group_guesses', event.value['word'])
+        #TODO: Delete
+        self.send('group_guesses', {'word' : 'hello'})
+
 
     def period_length(self):
         print('I went into the "period_length" funcion...')
