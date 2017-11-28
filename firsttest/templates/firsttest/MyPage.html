@@ -1,0 +1,161 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree %}
+
+{% block title %}
+    Page title
+{% endblock %}
+
+{% block scripts %}
+  <script>
+{#    // Boilerplate that lets you access useful oTree template variables from Javascript.#}
+{#    var oTree = oTree || {};#}
+{#    (function() {#}
+{#      oTree.group = parseInt("{{ player.group.pk }}");#}
+{#      oTree.group = isNaN(oTree.group) ? null : oTree.group;#}
+{#      oTree.role = "{{ player.role }}";#}
+{#      oTree.participantCode = "{{ player.participant.code }}";#}
+{#      oTree.appName = "{{ subsession.app_name }}";#}
+{#      oTree.idInGroup = "{{ player.id_in_group }}";#}
+{#      oTree.csrfToken = "{{ csrf_token }}";#}
+{#      {% if view.is_debug %}#}
+{#      oTree.debug = true;#}
+{#      {% else %}#}
+{#      oTree.debug = false;#}
+{#      {% endif %}#}
+{#    })();#}
+{##}
+{#    // Get the decision component and other-decision element.#}
+{##}
+{#    //i dont know, but this might be the whole redwood-decision.html thing .. e. g. we can access decision.otherDecision#}
+{#    var decision = document.querySelector("redwood-decision");#}
+{##}
+{#    // so we set this to manipulate the html tag with id='other-decision' below in the block contents#}
+{#    var otherDecision = document.getElementById("other-decision");#}
+{##}
+{#    // i try this#}
+{#    var groupDecision = document.getElementById('group-dec')#}
+{##}
+{#    // Log period start/end to the JavaScript console.#}
+{#    document.querySelector("redwood-period").addEventListener('period-start', function(event) {#}
+{#      console.log('period started');#}
+{#    });#}
+{#    document.querySelector("redwood-period").addEventListener('period-end', function(event) {#}
+{#      console.log('period ended');#}
+{#    });#}
+{##}
+{#    // When group decisions changes, update the text of the otherDecision element.#}
+{#    decision.addEventListener('group-decisions-changed', function(event) {#}
+{#      otherDecision.innerText = decision.otherDecision;#}
+{#    });#}
+{##}
+{#    // so i try this to manipulate the inner text of my group-dec tag#}
+{#     decision.addEventListener('group-decisions-changed', function(event) {#}
+{#      groupDecision.innerText = decision.groupDecisions#}
+{#    });#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{#    // Attach this to a button onclick event to set your decision when the button is clicked.#}
+{#    function setDecision(d) {#}
+{#      decision.myDecision = d;#}
+{#    }#}
+{##}
+{##}
+
+
+
+
+  // Delete everything above here
+
+
+    //This function is called when the submitt button is clicked
+    // this fills the field where the own submissions are listed
+    // I also want that the channel is fired from here...
+    function handleGuess() {
+        var guessed = document.getElementById('guessField').value;
+        var result = document.getElementById('result');
+
+        if (guessed.length < 1) {
+            result.textContent = 'Try a word';
+            //alert('try a word');
+        } else {
+            result.textContent = guessed;
+            //alert(nameField);
+        }
+    }
+
+
+    var subButton = document.getElementById('subButton');
+    subButton.addEventListener('click', handleGuess, false);
+
+
+
+  </script>
+
+  <link
+    rel="import"
+    href="/static/otree-redwood/webcomponents/redwood-decision/redwood-decision.html">
+  <link
+    rel="import"
+    href="/static/otree-redwood/webcomponents/redwood-period/redwood-period.html">
+  {% endblock %}
+
+  {% block content %}
+{#    <!-- Include the components on the page -->#}
+{#    <redwood-period></redwood-period>#}
+{#    <redwood-decision></redwood-decision>#}
+{##}
+{#    <p>Other Decision: <span id="other-decision"></span></p>#}
+{#      <p>Group Dec: <span id="group-dec"></span></p>#}
+{##}
+{##}
+{##}
+{#    <button type=button onclick="setDecision(0)">Decision=0</button>#}
+{#    <button type=button onclick="setDecision(1)">Decision=1</button>#}
+
+    <!-- Delete Everything above here -->
+
+
+
+      <template>
+    	<redwood-channel
+    		id="guessing"
+    		channel="guessing">
+	    </redwood-channel>
+
+
+    	<redwood-channel
+            id = 'correct_guess'
+    		channel="correct_guess">
+	    </redwood-channel>
+	</template>
+
+
+        <div class='wrapper'>
+        <form id='nameForm'>
+            <div class='form-uname'>
+            <lable id='nameLable' for='guessField'>Guess a word:</lable>
+            <input id='guessField' type='text' maxlength='25'></input>
+        </div>
+
+        <br><br>
+
+
+        <div class='form-sub'>
+        <button id='subButton' type='button'>Submitt your guess</button>
+        </div>
+        </form>
+
+<div>
+    <p id='result'></p></div>
+</div>
+
+
+
+
+
+{% endblock %}
+
+
