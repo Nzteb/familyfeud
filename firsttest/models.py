@@ -3,6 +3,7 @@ from otree.api import (
     Currency as c, currency_range
 )
 from otree_redwood.models import Event, DecisionGroup
+from otree_redwood.models import Group as RedwoodGroup
 
 author = 'Your name here'
 
@@ -22,17 +23,17 @@ class Subsession(BaseSubsession):
     pass
 
 
-class Group(DecisionGroup):
+class Group(RedwoodGroup):
 
-    def _on_guessing_event(self, event=None, **kwargs):
+    def _on_guessingChannel_event(self, event=None, **kwargs):
         # probably should verify the event.participant has enough balance/units
         # to send the order
-        print('heloooooooooooooo')
+        print('I went into "_on_guessing_Channel_events_" function...')
         # broadcast the order out to all subjects
         self.send("correct_guess", event.value)
 
     def period_length(self):
-        print(' i was here......................')
+        print('I went into the "period_length" funcion...')
         return 1000
 
 class Player(BasePlayer):

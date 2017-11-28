@@ -7,22 +7,29 @@
 
 {% block scripts %}
   <script>
-{#    // Boilerplate that lets you access useful oTree template variables from Javascript.#}
-{#    var oTree = oTree || {};#}
-{#    (function() {#}
-{#      oTree.group = parseInt("{{ player.group.pk }}");#}
-{#      oTree.group = isNaN(oTree.group) ? null : oTree.group;#}
-{#      oTree.role = "{{ player.role }}";#}
-{#      oTree.participantCode = "{{ player.participant.code }}";#}
-{#      oTree.appName = "{{ subsession.app_name }}";#}
-{#      oTree.idInGroup = "{{ player.id_in_group }}";#}
-{#      oTree.csrfToken = "{{ csrf_token }}";#}
-{#      {% if view.is_debug %}#}
-{#      oTree.debug = true;#}
-{#      {% else %}#}
-{#      oTree.debug = false;#}
-{#      {% endif %}#}
-{#    })();#}
+
+
+    // Boilerplate that lets you access useful oTree template variables from Javascript.
+    //<otree-constants>` is used by most of the other webcomponents, so this block is
+    //required in any template using the otree-redwood components:
+    var oTree = oTree || {};
+    (function() {
+      oTree.group = parseInt("{{ player.group.pk }}");
+      oTree.group = isNaN(oTree.group) ? null : oTree.group;
+      oTree.role = "{{ player.role }}";
+      oTree.participantCode = "{{ player.participant.code }}";
+      oTree.appName = "{{ subsession.app_name }}";
+      oTree.idInGroup = "{{ player.id_in_group }}";
+      oTree.csrfToken = "{{ csrf_token }}";
+      {% if view.is_debug %}
+      oTree.debug = true;
+      {% else %}
+      oTree.debug = false;
+      {% endif %}
+    })();
+
+
+
 {##}
 {#    // Get the decision component and other-decision element.#}
 {##}
@@ -67,21 +74,31 @@
 
 
 
-  // Delete everything above here
+    // Delete everything above here
+    // vars
+
+
 
 
     //This function is called when the submitt button is clicked
     // this fills the field where the own submissions are listed
     // I also want that the channel is fired from here...
     function handleGuess() {
-        var guessed = document.getElementById('guessField').value;
-        var result = document.getElementById('result');
+        //TODO i would like to initialize the variables out of the function so that they are not initialized evertime when the function is called
+        //TODO because this happens alot ... i tried, but i couldnt, so i leave them in here for now
+        //grap the input of the input form as a variable
+         var guessed = document.getElementById('guessField').value;
+         var result = document.getElementById('result');
+         var guessingChan = document.getElementById("guessingChannel");
+
 
         if (guessed.length < 1) {
             result.textContent = 'Try a word';
             //alert('try a word');
+
         } else {
             result.textContent = guessed;
+            guessingChan.send(guessed)
             //alert(nameField);
         }
     }
@@ -94,12 +111,12 @@
 
   </script>
 
-  <link
-    rel="import"
-    href="/static/otree-redwood/webcomponents/redwood-decision/redwood-decision.html">
-  <link
-    rel="import"
-    href="/static/otree-redwood/webcomponents/redwood-period/redwood-period.html">
+  <link rel="import" href="/static/otree-redwood/webcomponents/redwood-period/redwood-period.html">
+   <link rel="import" href="/static/otree-redwood/webcomponents/redwood-channel/redwood-channel.html" />
+    <link
+	rel="import"
+	href="/static/bower_components/polymer/polymer.html" />
+
   {% endblock %}
 
   {% block content %}
@@ -117,20 +134,19 @@
 
     <!-- Delete Everything above here -->
 
+      <redwood-period></redwood-period>
 
-
-      <template>
-    	<redwood-channel
-    		id="guessing"
-    		channel="guessing">
+      <redwood-channel
+    		id="guessingChannel"
+    		channel="guessingChannel">
 	    </redwood-channel>
 
 
     	<redwood-channel
-            id = 'correct_guess'
+            id = 'correct_guessChannel'
     		channel="correct_guess">
 	    </redwood-channel>
-	</template>
+
 
 
         <div class='wrapper'>
@@ -147,6 +163,7 @@
         <button id='subButton' type='button'>Submitt your guess</button>
         </div>
         </form>
+        <br> <br>
 
 <div>
     <p id='result'></p></div>
