@@ -7,6 +7,8 @@
 
 {% block scripts %}
   <script>
+
+
     // Boilerplate that lets you access useful oTree template variables from Javascript.
     // from the docs:
     //<otree-constants>` is used by most of the other webcomponents, so this block is
@@ -26,6 +28,10 @@
       oTree.debug = false;
       {% endif %}
     })();
+
+
+
+
     //This function is called when the submitt button is clicked
     // this fills the field where the own submissions are listed
     // I also want that the channel is fired from here...
@@ -35,32 +41,38 @@
          var guessed = document.getElementById('guessField').value;
          var result = document.getElementById('result');
          var guessingChan = document.getElementById("guessingChannel");
+
         if (guessed.length < 1) {
             result.textContent = 'Please type anything';
+
         } else {
             result.textContent = guessed;
             guessingChan.send({word: guessed})
         }
     }
+
     // Call the handle Guess function whenever the submitt button is clicked (then the guess is displayed for the player and sended to the channel)
     var subButton = document.getElementById('subButton');
     subButton.addEventListener('click', handleGuess, false);
+
     // function that receives the other guesses and modifies the respective html tag to display it
     function other_guesses(event) {
+        //reveive the guess of another player, call it msg
         var setguess =  document.getElementById('otherguess');
         setguess.textContent = event.detail.payload
-        //setguess.textContent = 'At least, the function was called'
+        setguess.textContent = 'At least, the function was called'
+
     }
-    document.getElementById('groupGuessChannel').addEventListener('event', other_guesses);
+
+
+
   </script>
 
-  <link
-    rel="import"
-    href="/static/otree-redwood/webcomponents/redwood-period/redwood-period.html">
-  <link
-    rel="import"
-    href="/static/otree-redwood/webcomponents/redwood-channel/redwood-channel.html" />
-
+  <link rel="import" href="/static/otree-redwood/webcomponents/redwood-period/redwood-period.html">
+   <link rel="import" href="/static/otree-redwood/webcomponents/redwood-channel/redwood-channel.html" />
+    <link
+	rel="import"
+	href="/static/bower_components/polymer/polymer.html" />
 
   {% endblock %}
 
@@ -75,13 +87,14 @@
 
 
       <redwood-channel
-        id="groupGuessChannel"
-    		channel="group_guesses">
+            id = "group_guesses"
+    		channel="group_guesses"
+            on-event ="other_guesses">
 	    </redwood-channel>
 
 
     	<redwood-channel
-        id="correctGuessChannel"
+            id = 'correct_guessChannel'
     		channel="correct_guess">
 	    </redwood-channel>
 
@@ -120,4 +133,10 @@
        </div>
 
 
+
+
+
+
 {% endblock %}
+
+
