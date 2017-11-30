@@ -18,16 +18,19 @@ class Constants(BaseConstants):
     players_per_group = None
     num_rounds = 1
 
+    correctwordlist = ['Apple', 'Banana']
+
 
 
 class Subsession(BaseSubsession):
 
     def creating_session(self):
-        # alist = []
-        # alist.append(random.choice(['Apple', 'Banana']))
-        # alist.append(random.choice(['Soccer', 'Tennis']))
-        # self.session.vars['wordlist'] = alist
-        pass
+        #TODO check but I think this is done for every round seperately, so you can use it
+        #TODO to distribute the questions to all game rounds of all rounds of the experiment
+        alist = []
+        alist.append(random.choice(Constants.correctwordlist))
+        self.session.vars['correctwordlist'] = alist
+
 
 
 
@@ -36,15 +39,15 @@ class Group(RedwoodGroup):
     def _on_guessingChannel_event(self, event=None, **kwargs):
 
         print('I went into "_on_guessing_Channel_events_" function...')
-        #the guessed value of the event is in form of {word: 'guessed word'}
-        print('I received the guess of the player, the guess is: %s'  %(event.value['word']))
-        # broadcast the order out to all subjects
-        # if event.value['word'] in self.session.vars['wordlist']:
-        #     self.send("correct_guess", event.value['word'])
+        print('I received the guess of the player, the guess is: %s'  %(event.value['guess']))
 
-        #send the guess back, in anycase to list it for the other players
-        if True:
-            self.send('group_guesses', event.value['word'])
+
+        #if the word is correct, send it to the correct_guess channel
+        if event.value['guess'] in self.session.vars['correctwordlist']:
+            self.send('correct_guess', event.value['guess'])
+        else: #if the word is not correct send it to the group_guesses channel
+            self.send('group_guesses', event.value['guess'])
+
 
 
 
