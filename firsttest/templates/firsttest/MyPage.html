@@ -75,9 +75,9 @@
      //call other_guesses, whenever something is sent from oTree over the groupGuessChannel
     document.getElementById('correctGuessChannel').addEventListener('event', correct_guess);
 
-            function correct_guess(event) {
+    function correct_guess(event) {
         //receive the guess of another player, call it msg
-        var correctguess =  document.getElementById('correctguess');
+        var correctguess =  document.getElementById('word1');
         correctguess.textContent = event.detail.payload
     }
 
@@ -166,7 +166,7 @@
 
               <!-- Display a correct guess of the players -->
                <div id="wordholder">
-                   <p id='correctguess' style="border:1px; border-style:solid; padding-left: 6px";>Word 1</p>
+                   <p id='word1' style="border:1px; border-style:solid; padding-left: 6px";>Word 1</p>
                </div>
 
                 <br><br><br><br><br><br><br><br><br><br><br>
