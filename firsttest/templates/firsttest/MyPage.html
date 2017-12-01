@@ -9,6 +9,19 @@
   <script>
 
 
+    //this prevents that pressing enter will automatically submitt the page and abort the game for a player
+    $(document).on("keypress", 'form', function (e) {
+    var code = e.keyCode || e.which;
+    console.log(code);
+    if (code == 13) {
+        console.log('Inside');
+        e.preventDefault();
+        return false;
+    }
+});
+
+
+
     // Boilerplate that lets you access useful oTree template variables from Javascript.
     // from the docs:
     //<otree-constants>` is used by most of the other webcomponents, so this block is
@@ -72,16 +85,27 @@
 
     }
 
-     //call other_guesses, whenever something is sent from oTree over the groupGuessChannel
+     //call correct guess, whenever something is sent from oTree over the groupGuessChannel
     document.getElementById('correctGuessChannel').addEventListener('event', correct_guess);
 
     function correct_guess(event) {
         //receive the guess of another player, call it msg
-        var correctguess =  document.getElementById('word1');
-        correctguess.textContent = event.detail.payload
+
+        console.log(event.detail.payload)
+        // note: from otree i send a dic e.g: {'correctguess': guess.capitalize(),'whichword': s_i}
+        // this is how i can acces it: event.detail.payload.correctguess; event.detail.payload.whichword
+
+        // get exactly the html corresponding to the answer that is sent from otree, thats cool
+        var correctguess =  document.getElementById(event.detail.payload.whichword);
+        correctguess.textContent = event.detail.payload.correctguess
     }
 
 
+    document.getElementById('questionChannel').addEventListener('event', receive_question);
+    function receive_question(event){
+        var questiontag = document.getElementById('question')
+        questiontag.textContent = event.detail.payload
+    }
 
   </script>
 
@@ -118,11 +142,15 @@
             overflow: hidden; /* if you don't want #wordbar to wrap below #first */
         }
         #centerthis {
-            margin-left: 20px;
+            margin-left: 30px;
         }
         h4{ margin-left: 70px; margin-top: 10px}
 
-        #wordholder{width: 70px; margin-left: 100px; margin-top: 60px;}
+        #wordholder{width: 70px; margin-top: 60px;}
+
+        #question{font-family: "HelveticaNeue-Light"; font-weight: bold;}
+
+
 
 
     </style>
@@ -142,15 +170,23 @@
 
 
       <redwood-channel
-        id="groupGuessChannel"
+            id="groupGuessChannel"
     		channel="group_guesses">
 	    </redwood-channel>
 
 
     	<redwood-channel
-        id="correctGuessChannel"
+            id="correctGuessChannel"
     		channel="correct_guess">
 	    </redwood-channel>
+
+
+        <redwood-channel
+            id="questionChannel"
+    		channel="questionChannel">
+	    </redwood-channel>
+
+
 
 
       <!-- Template of the page -->
@@ -166,28 +202,33 @@
 
               <!-- Display a correct guess of the players -->
                <div id="wordholder">
-                   <p id='word1' style="border:1px; border-style:solid; padding-left: 6px";>Word 1</p>
+                   <p id='s1' style="border:1px; border-style:solid; padding-left: 6px";>Word 1</p>
+                   <p id='s2' style="border:1px; border-style:solid; padding-left: 6px";>Word 2</p>
+                   <p id='s3' style="border:1px; border-style:solid; padding-left: 6px";>Word 3</p>
+                   <p id='s4' style="border:1px; border-style:solid; padding-left: 6px";>Word 4</p>
+                   <p id='s5' style="border:1px; border-style:solid; padding-left: 6px";>Word 5</p>
                </div>
 
-                <br><br><br><br><br><br><br><br><br><br><br>
+                <br><br><br>
 
-                <!-- Input form -->
-                <div class='wrapper'>
-                <form id='nameForm'>
-                    <div class='form-uname'>
-                    <input id='guessField' type='text' maxlength='25' placeholder="Guess a word!"></input>
-                </div>
-
-                <br>
+                <!-- Display the question -->
+                <p id="question">Prepare for the first question ...</p>
 
 
-                <!-- Submitt input button -->
-                <div class='form-sub'>
-                <button id='subButton' type='button'>Submitt your guess</button>
-                </div>
-                </form>
+              <br><br>
 
-                <br> <br>
+              <!-- Input form -->
+              <input id='guessField' type='text' maxlength='25' placeholder="Guess a word!" >
+
+
+                <br><br>
+
+                <!-- Button submitt input  -->
+                <button id='subButton' type='button' >Submitt your guess</button>
+
+
+
+                <br><br>
 
                  <!-- Display the players last guess -->
                 <div>Your last guess: <br>
