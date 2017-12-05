@@ -55,8 +55,8 @@ class Group(RedwoodGroup):
     #TODO but at least the function is called, this is good I suppose
     def when_all_players_ready(self):
         print('when all players ready was called...')
-        #send the question out to the channel
-        self.send('questionChannel', self.session.vars['quizload1']['question'])
+        #send the whole quiz packet to the channel
+        self.send('questionChannel', self.session.vars['quizload1'])
         return
 
 
@@ -73,11 +73,12 @@ class Group(RedwoodGroup):
 
         good_guess = False
         for answernum in ['s1', 's2', 's3', 's4', 's5']:
-            #check if the guess is correct, if yes send it, togehter with the answernum, to to correct_guess channel
+            #check if the guess is correct, if yes send it, together with the answernum, to correct_guess channel
             if guess in question[answernum]:
                 good_guess = True
-                self.send('correct_guess', {'correctguess': guess.capitalize(),
+                self.send('correct_guess', {'correctguess': question[answernum][0].capitalize(), #send the exactly correct answer back
                                             'whichword': answernum})
+                break
         if good_guess == False: #word was not right, send it to the usual group channel so it can be displayed on the right
                 self.send('group_guesses', guess)
 
@@ -89,12 +90,14 @@ class Group(RedwoodGroup):
 
     def period_length(self):
         print('I went into the "period_length" funcion...')
-        return 1000
+        return 160
 
 class Player(BasePlayer):
 
         def initial_decision(self):
             return 0.5
+
+
 
 
 
