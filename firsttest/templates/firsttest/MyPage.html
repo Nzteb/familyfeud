@@ -95,26 +95,44 @@
         correctguess.textContent = event.detail.payload.correctguess
     }
 
-    //at the beginning of every subround of familyfeud (every new question)
+    //sending a new question to from oTree models to the players
+    // initializing the 40 + 5 seconds round of a question
     document.getElementById('questionChannel').addEventListener('event', receive_question);
     function receive_question(event){
+        //if multiple family feud subrounds (more then 1 question) are played turn shown solutions to placeholders again
+        var s1 =  document.getElementById('s1');
+        s1.textContent = 'Word 1'
+        var s2 =  document.getElementById('s2');
+        s2.textContent = 'Word 2'
+        var s3 =  document.getElementById('s3');
+        s3.textContent = 'Word 3'
+        var s4 =  document.getElementById('s4');
+        s4.textContent = 'Word 4'
+        var s5 =  document.getElementById('s5');
+        s5.textContent = 'Word 5'
+
+        // display question
         var questiontag = document.getElementById('question')
         questiontag.textContent = event.detail.payload.question
-        //TODO i dont expect this to work, can the user still interact?
-        //TODO it actually works, is this good practice?
-        //activate the round, oTree doesnt know about this yet
-        run_round(event,30)
+
+        //activate the round
+        currtime = new Date().getTime()
+        stoptime = currtime + 30000
+        run_round(event,stoptime)
+
     }
 
-    function run_round(anevent, n){
+    function run_round(anevent, stoptime){
         //start the timer
-       n--;
-       document.getElementById('timer').textContent = 'Time left: ' + parseInt(n)
+       currtime = new Date().getTime();
+       n = Math.floor((stoptime - currtime)/1000);
+       document.getElementById('timer').textContent = 'Time left: ' + parseInt(n);
+       // call function again every second until the time is up
        if(n > 1 ) {
-           setTimeout( function() {run_round(anevent, n);},1000)
+           setTimeout( function() {run_round(anevent, stoptime);},1000)
        }else {
-           //time is up display all solutions
-           setTimeout(function () {display_all(anevent);}, 1000)
+           //time is up, display all solutions
+           setTimeout(function () {display_all(anevent);}, 1000);
            document.getElementById('timer').textContent = 'Round Done'
 
        }
@@ -135,7 +153,21 @@
         var s5 =  document.getElementById('s5');
         s5.textContent = anevent.detail.payload.s5[0]
 
+
+        //wait 5 seconds and then let the first player in the group request oTree to send another question
+        setTimeout( function() {request_question();}, 5000)
+
+
     }
+    //if you play more then 1 question in a family feud subround
+    function request_question(){
+        if (oTree.idInGroup == 1){
+        var questionChan = document.getElementById("questionChannel");
+        //send to Otree, so otree sends a question back
+        questionChan.send({some:'load'})
+        }
+    }
+
 
 
   </script>
