@@ -2,7 +2,7 @@ from otree.api import (
     models, widgets, BaseConstants, BaseSubsession, BaseGroup, BasePlayer,
     Currency as c, currency_range
 )
-from otree_redwood.models import Event, DecisionGroup
+
 from otree_redwood.models import Group as RedwoodGroup
 import random
 
@@ -16,13 +16,14 @@ Your app description
 class Constants(BaseConstants):
     name_in_url = 'firsttest'
     players_per_group = None
-    num_rounds = 1
+    num_rounds = 2
+    questions_per_round = 1
+    secs_per_question = 20
+    wait_between_question = 4
 
 
-    #TODO: later on: create different quiz pools for the different rounds, might be the easiest solution to prevent duple questions
-    #contains of a list of dictionaries, where each dic is aligned to a round, where each round dics contains a list of question dictionaries
-    # the first word in s_i is always the exactly correct solution
-    quizload = {'round1':[
+
+    quizload = [
                 {'question':"Name a Place You Visit Where You Aren't Allowed to Touch Anything",
                    's1': ["Museum gallery",'Museum', 'Gallery', 'Museum gallery'],
                    's2': ['Zoo', 'Animal'],
@@ -35,92 +36,78 @@ class Constants(BaseConstants):
                  's2': ['Bra'],
                  's3': ['Hat'],
                  's4': ['Coat'],
-                 's5': ['Sweater']}]
-    }
+                 's5': ['Sweater']}
+    ]
 
 
 
 class Subsession(BaseSubsession):
 
+    #remember: this function is seperately called for every oTree round when one clicks creating session
     def creating_session(self):
 
-        #TODO delete me
-        print(' ..I was in creating session ... ')
+        #copy the list of questions to alter it when drawing from it
+        quizload = Constants.quizload.copy()
+        questions_per_round = Constants.questions_per_round
 
-        #I have to initialize this here, otherwise oTree will look for it
-        #TODO .... ?!
-        #TODO 12.12.2017 something weird going on here....
-
-        self.session.vars['current_quest_num'] = 1
-
-        for round_num in range(1,11):
+        # distribute all the questions randomly over the rounds and subquestions (if multiple questions per round)
+        # a question cannot be drawn twice for the whole game
+        for round_num in range(1,Constants.num_rounds+1):
             if self.round_number == round_num:
-                #at the moment drawing 2 questions for one family feud round
-                for question_num in range(1,3):
-                    question = random.choice(Constants.quizload['round' + str(round_num)])
-                    #ql_11 e.g. means quizload for round 1 question 1
-                    #TODO as is, questions could be drawn twice
+                for question_num in range(1,questions_per_round+1):
+                    question = random.choice(quizload)
+                    quizload.remove(question)
+                    # hold the quizload of the question in session.vars to acces later
+                    # ql_11 e.g. means quizload for round 1 question 1
                     self.session.vars['ql_' + str(round_num) + str(question_num)] = question
-
 
 
 
 
 class Group(RedwoodGroup):
 
+    current_quest_num = models.IntegerField()
+
     def when_all_players_ready(self):
         #initialize the current question to question number 1 when a new family feud round starts
-        self.session.vars['current_quest_num'] = 1
-
+        self.current_quest_num = 1
+        #TODO delete me..
         print('when all players ready was called...')
-        #send the whole quiz packet to the channel
+        #send the whole quiz packet (one question) to the channel
         self.sendquizload_toplayers()
         return
 
 
-    #this will triger 'receive_question ()' function in javascript and in javascript the timer will be initialized
+    # this will triger 'receive_question ()' function in javascript and in javascript the timers will be initialized
+    # the function is called at the beginning from when_all_players_ready and under multiple questions when requested from a player through questionChannel
     def sendquizload_toplayers(self):
-        #reveice the current question number
-        quest_num = self.session.vars['current_quest_num']
         #send the correct question to javascript, see the formatting in creating_session
-        self.send('questionChannel', self.session.vars['ql_'+ str(self.round_number) + str(quest_num)])
+        self.send('questionChannel', self.session.vars['ql_'+ str(self.round_number) + str(self.current_quest_num)])
         #increment the current question number, so nexttime you are called you send the next question out
+        self.current_quest_num +=1
+        #TODO: You need save() here, otherwise the incrementing does not have permanent effect and weird things happen
+        #TODO: see the oTree Redwood doc Group.save()
+        self.save()
 
-        # TODO delete me:
-        print(self.session.vars['current_quest_num'])
-        # TODO: 12.12.2017 ok some very weird things are going on here .. the increment works but when the function is
-        # TODO called for the second time current_quest_num starts at 1 again... ? so either the creating session function or before players ready
-        # TODO must be called? Or is there another reason? Because i cant see why these functions should be called
-        # TODO also, the game didnt end despite the fact that period length is set
 
-        #TODO: ok i resetted db again and it actually did finish the game
-        #TODO: so the game doesnt end despite the fact that subperiod is set might be false alarm
-        #TODO but the incrementing issue remains
-
-        self.session.vars['current_quest_num'] +=1
-
-        #TODO delete me:
-        print(self.session.vars['current_quest_num'])
-
-    # if multiple questions are played in one round the first player of every group sends a message to the channel
-    # this triggers this function which calls sendquizload to which will send a new question and trigger receive_question in
-    # java script, therefore starting a new question
+    # if multiple questions in a round this will be triggered from each first player in the group by the channel; e. g. the player requests a new question
     def _on_questionChannel_event(self, event = None):
-        #from javascript the first player in the group requests a question over the question channel
+        #send a new question back
         self.sendquizload_toplayers()
 
-    #reveives all the guesses of the players, decides if guess was right and about points
+    #reveives all the guesses of the players, decides if guess was right and shall calculate points
     #sends processed information back to the players in javascript (e. g. correct guess, wrong guesses)
     def _on_guessingChannel_event(self, event=None):
-
         #TODO Delete me
         print('I went into "_on_guessing_Channel_events_" function...')
         print('I received the guess of the player, the guess is: %s' % (event.value['guess']))
 
         #the guess that was send from a player
         guess = event.value['guess'].lower()
+
         # the the current question (dictionaire)
-        question = self.session.vars['ql_' + str(self.round_number) + str(self.session.vars['current_quest_num'])]
+        question = self.session.vars['ql_' + str(self.round_number) + str(self.current_quest_num-1)] # you need the minus 1 because curr_quest is immediately in
+                                                                                                     # -cremented after sending the question out, so the current is actually curr_quest-1
         good_guess = False
         # check if the guess is correct, if yes send it, together with the answernum, to correct_guess channel
         for answernum in ['s1', 's2', 's3', 's4', 's5']:
@@ -139,8 +126,15 @@ class Group(RedwoodGroup):
 
 
     def period_length(self):
+        #TODO delete me
         print('I went into the "period_length" funcion...')
-        return 90
+        # determine time in seconds before the game is left and the next page is displayed
+        # TODO: could it be that javascript is slower and the game is aborted before it is finished?
+        return (Constants.questions_per_round) * ((Constants.secs_per_question + Constants.wait_between_question)-1) # TODO: with the minus one we assume
+                                                                                                                     # that javascript does not slow down at all
+                                                                                                                     # then we abort the game 1 second before the
+                                                                                                                     # next question is displayed
+
 
 class Player(BasePlayer):
 

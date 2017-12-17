@@ -35,6 +35,8 @@
       oTree.appName = "{{ subsession.app_name }}";
       oTree.idInGroup = "{{ player.id_in_group }}";
       oTree.csrfToken = "{{ csrf_token }}";
+      oTree.secsPerQuestion = {{ Constants.secs_per_question }}
+      oTree.waitBetween = {{ Constants.wait_between_question }}
       {% if view.is_debug %}
       oTree.debug = true;
       {% else %}
@@ -117,7 +119,7 @@
 
         //activate the round
         currtime = new Date().getTime()
-        stoptime = currtime + 30000
+        stoptime = currtime + (oTree.secsPerQuestion*1000)
         run_round(event,stoptime)
 
     }
@@ -155,7 +157,7 @@
 
 
         //wait 5 seconds and then let the first player in the group request oTree to send another question
-        setTimeout( function() {request_question();}, 5000)
+        setTimeout( function() {request_question();}, oTree.waitBetween*1000)
 
 
     }
