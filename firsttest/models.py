@@ -17,7 +17,7 @@ class Constants(BaseConstants):
     name_in_url = 'firsttest'
     players_per_group = None
     num_rounds = 2
-    questions_per_round = 1
+    questions_per_round = 2
     secs_per_question = 20
     wait_between_question = 4
 
@@ -36,7 +36,24 @@ class Constants(BaseConstants):
                  's2': ['Bra'],
                  's3': ['Hat'],
                  's4': ['Coat'],
-                 's5': ['Sweater']}
+                 's5': ['Sweater']},
+
+                {'question': "Name Something People Are Often Chased by in Movies",
+                 's1': ['Monsters', 'Monster'],
+                 's2': ['Cars', 'Car'],
+                 's3': ['Cops', 'Cop','Police'],
+                 's4': ['Bad Guys' , 'Bad Guy'],
+                 's5': ['Dogs', 'Dog']},
+
+                {'question': "Name Something That a Man Had Better Not Take Along on His Honeymoon",
+                 's1': ['Another Woman'],
+                 's2': ['Work', 'Laptop'],
+                 's3': ['His Parents', 'Parents'],
+                 's4': ['His Best Friend','Best Friend','Friend'],
+                 's5': ['Pet']},
+
+
+
     ]
 
 
@@ -45,21 +62,22 @@ class Subsession(BaseSubsession):
 
     #remember: this function is seperately called for every oTree round when one clicks creating session
     def creating_session(self):
+        print('creating session..')
 
         #copy the list of questions to alter it when drawing from it
         quizload = Constants.quizload.copy()
         questions_per_round = Constants.questions_per_round
 
         # distribute all the questions randomly over the rounds and subquestions (if multiple questions per round)
-        # a question cannot be drawn twice for the whole game
-        for round_num in range(1,Constants.num_rounds+1):
-            if self.round_number == round_num:
-                for question_num in range(1,questions_per_round+1):
-                    question = random.choice(quizload)
-                    quizload.remove(question)
-                    # hold the quizload of the question in session.vars to acces later
-                    # ql_11 e.g. means quizload for round 1 question 1
-                    self.session.vars['ql_' + str(round_num) + str(question_num)] = question
+        # only distribute the questions at the function call of round 1, so question appears twice
+        if self.round_number == 1:
+            for round_num in range(1,Constants.num_rounds+1):
+                    for question_num in range(1,questions_per_round+1):
+                        question = random.choice(quizload)
+                        quizload.remove(question)
+                        # hold the quizload of the question in session.vars to access later
+                        # ql_11 e.g. means quizload for round 1 question 1
+                        self.session.vars['ql_' + str(round_num) + str(question_num)] = question
 
 
 
