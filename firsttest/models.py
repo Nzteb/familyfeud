@@ -6,17 +6,17 @@ from otree.api import (
 from otree_redwood.models import Group as RedwoodGroup
 import random
 
-author = 'Your name here'
+author = 'Patrick Betz'
 
 doc = """
-Your app description
+Parallel Family Feud
 """
 
 
 class Constants(BaseConstants):
     name_in_url = 'firsttest'
     players_per_group = None
-    num_rounds = 2
+    num_rounds = 1
     questions_per_round = 2
     secs_per_question = 20
     wait_between_question = 4
@@ -114,7 +114,7 @@ class Group(RedwoodGroup):
         self.sendquizload_toplayers()
 
     #reveives all the guesses of the players, decides if guess was right and shall calculate points
-    #sends processed information back to the players in javascript (e. g. correct guess, wrong guesses)
+    #sends processed information back to the players in javascript
     def _on_guessingChannel_event(self, event=None):
         #TODO Delete me
         print('I went into "_on_guessing_Channel_events_" function...')
@@ -122,20 +122,27 @@ class Group(RedwoodGroup):
 
         #the guess that was send from a player
         guess = event.value['guess'].lower()
+        player_id_in_group = event.value['id']
 
-        # the the current question (dictionaire)
+        #the current question (dictionaire)
         question = self.session.vars['ql_' + str(self.round_number) + str(self.current_quest_num-1)] # you need the minus 1 because curr_quest is immediately in
                                                                                                      # -cremented after sending the question out, so the current is actually curr_quest-1
         good_guess = False
-        # check if the guess is correct, if yes send it, together with the answernum, to correct_guess channel
+        # check if the guess is correct, if yes send respective information back to javascript
         for answernum in ['s1', 's2', 's3', 's4', 's5']:
-            if guess in list(map(lambda x: x.lower(), question[answernum])): # e. g. question[s1] is a list with all the solutions for the correct word 1 of the current question
+            # e. g. question[s1] is a list with all the solutions for the correct word 1 of the current question
+            if guess in list(map(lambda x: x.lower(), question[answernum])):
                 good_guess = True
-                self.send('correct_guess', {'correctguess': question[answernum][0], #send the exactly correct answer back, which is the 0 element of the list
-                                            'whichword': answernum})
+                self.send('guessInformations', {'guess': question[answernum][0], #send the exactly correct answer back, which is the 0 element of the list
+                                                'whichword': answernum,
+                                                'idInGroup': player_id_in_group,
+                                                'correct': True})
                 break
-        if good_guess == False: #word was not right, send it to the usual group channel so it can be displayed on the right
-                self.send('group_guesses', guess)
+        # guess was not correct, send respective informations back
+        if good_guess == False:
+                self.send('guessInformations', {'guess': guess,
+                                                'idInGroup': player_id_in_group,
+                                                'correct': False})
 
 
 
