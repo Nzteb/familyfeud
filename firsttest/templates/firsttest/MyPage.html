@@ -72,11 +72,11 @@
 
 
 
-    // Receives information over channel from 'on_guessingChannel_event' in oTree after the guess is processed
+    // Receives information over channel from 'on_guessingChannel_event' in oTree after the guess is processed there
     // Takes all the desired actions
     document.getElementById('guessInformations').addEventListener('event', instructions_after_guess)
     function instructions_after_guess(event){
-
+        // if the guess was right
         if (event.detail.payload.correct == true){
             // reveal the correctly guessed word
             var correctguess = document.getElementById(event.detail.payload.whichword);
@@ -95,13 +95,19 @@
             node.appendChild(span1);
             document.getElementById("guesslist").appendChild(node);
 
+            // //scroll the div around the guesslist to the end, so always the newewst guess is displayed
+            var scrollme = document.getElementById('aroundguesslist');
+            scrollme.scrollTop = scrollme.scrollHeight;
+
+
+
             // if the player is the who guessed correctly, tell him good job
             if (oTree.idInGroup == event.detail.payload.idInGroup){
                 var message = document.getElementById('message')
                 message.textContent = 'Good Job!'
             }
 
-        // if it was wrong guess
+        // if the guess was wrong
         } else {
             // display message for all players on message board
             var node = document.createElement("Li");
@@ -115,6 +121,10 @@
             span1.appendChild(span2)
             node.appendChild(span1);
             document.getElementById("guesslist").appendChild(node);
+
+            //scroll the div around the guesslist to the end, so always the newewst guess is displayed
+            var scrollme = document.getElementById('aroundguesslist');
+            scrollme.scrollTop = scrollme.scrollHeight;
 
 
             // if the player is the who guessed correctly, tell him try again
@@ -170,7 +180,7 @@
        }else {
            //time is up, display all solutions
            setTimeout(function () {display_all(anevent);}, 1000);
-           document.getElementById('timer').textContent = 'Round Done'
+           document.getElementById('timer').textContent = 'Round Done, please wait a moment ...'
 
        }
     }
@@ -224,22 +234,22 @@
         wrapper {
         width: 500px;
         border: 1px solid black;
-        overflow: hidden; /* will contain if #middle is longer than #wordbar */
+        overflow: hidden; /* will contain if #middle is longer than #groupguesses */
         }
 
         #middle {
             width: 500px;
             height: 500px;
             float:left; /* add this */
-            border: 1px solid red;
+            border: 1px solid blue;
             margin-right: 20px;
         }
-        #wordbar {
+        #groupguesses {
             margin-top: -5px;
-            border: 1px solid green;
+            border: 1px solid darkblue;
             width: 300px;
             height: 500px;
-            overflow: hidden; /* if you don't want #wordbar to wrap below #first */
+            overflow: hidden; /* if you don't want #groupguesses to wrap below #first */
         }
         #centerthis {
             margin-left: 30px;
@@ -248,7 +258,10 @@
 
         #wordholder{width: 150px; margin-top: 60px;}
 
-        #question{font-family: "HelveticaNeue-Light"; font-weight: bold;}
+        #question{font-family: "Helvetica"; font-weight: bold;}
+
+        /* overflow auto implements the scrolling behavior; auto scrolling to the end of the div is activated in 'instructions_after_guess' */
+        #aroundguesslist{overflow: auto; height: 420px; width: 300px; float: right}
 
 
 
@@ -347,16 +360,15 @@
 
         </div>
 
-        <div id="wordbar">
+        <div id="groupguesses">
             <h4>Group Guesses</h4>
 
 
            <!-- Display guesses of the other players -->
            <br>
-           <ul id='guesslist' style="list-style: None"></ul>
-
-
-
+           <div id="aroundguesslist">
+            <ul id='guesslist' style="list-style: None"></ul>
+           </div>
         </div>
       </div>
 
