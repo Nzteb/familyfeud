@@ -18,7 +18,7 @@ class Constants(BaseConstants):
     players_per_group = None
     num_rounds = 1
     questions_per_round = 2
-    secs_per_question = 20
+    secs_per_question = 60
     wait_between_question = 4
 
 
@@ -69,7 +69,7 @@ class Subsession(BaseSubsession):
         questions_per_round = Constants.questions_per_round
 
         # distribute all the questions randomly over the rounds and subquestions (if multiple questions per round)
-        # only distribute the questions at the function call of round 1, so question appears twice
+        # only distribute the all the questions for all the round at the function call of round 1
         if self.round_number == 1:
             for round_num in range(1,Constants.num_rounds+1):
                     for question_num in range(1,questions_per_round+1):
@@ -85,10 +85,18 @@ class Subsession(BaseSubsession):
 class Group(RedwoodGroup):
 
     current_quest_num = models.IntegerField()
+    s1_answered = models.BooleanField()
+    s2_answered = models.BooleanField()
+    s3_answered = models.BooleanField()
+    s4_answered = models.BooleanField()
+    s5_answered = models.BooleanField()
+    group_points = models.IntegerField(initial=0)
+    question_sequence = models.CharField(initial='')
+
 
     def when_all_players_ready(self):
         #initialize the current question to question number 1 when a new family feud round starts
-        self.current_quest_num = 1
+        self.current_quest_num = 0
         #TODO delete me..
         print('when all players ready was called...')
         #send the whole quiz packet (one question) to the channel
@@ -99,12 +107,37 @@ class Group(RedwoodGroup):
     # this will triger 'receive_question ()' function in javascript and in javascript the timers will be initialized
     # the function is called at the beginning from when_all_players_ready and under multiple questions when requested from a player through questionChannel
     def sendquizload_toplayers(self):
-        #send the correct question to javascript, see the formatting in creating_session
+
+        #TODO delete me
+        print('I WANTED to send quizload')
+
+        # increment the current question number
+        # TODO: You need save() for all database operations ingame, otherwise the changes have no effect on the database
+        # TODO: see the oTree Redwood doc Group.save()
+        self.current_quest_num += 1
+        self.save()
+
+        # send the correct question to javascript, see the formatting in creating_session
         self.send('questionChannel', self.session.vars['ql_'+ str(self.round_number) + str(self.current_quest_num)])
-        #increment the current question number, so nexttime you are called you send the next question out
-        self.current_quest_num +=1
-        #TODO: You need save() here, otherwise the incrementing does not have permanent effect and weird things happen
-        #TODO: see the oTree Redwood doc Group.save()
+
+        ## update the question sequence, to have the question in the database
+        # string sentence of the question
+        question = self.session.vars['ql_'+ str(self.round_number) + str(self.current_quest_num)]['question']
+        #TODO: use a better string operation
+        self.question_sequence = self.question_sequence +   str(self.current_quest_num) + ':' + question + ';'
+        self.save()
+
+        #at the beginning of every new question round, no solution has been found
+        #TODO, do i need all the saves or is 1 enough?
+        self.s1_answered = False
+        self.save()
+        self.s2_answered = False
+        self.save()
+        self.s3_answered = False
+        self.save()
+        self.s4_answered = False
+        self.save()
+        self.s5_answered = False
         self.save()
 
 
@@ -113,41 +146,84 @@ class Group(RedwoodGroup):
         #send a new question back
         self.sendquizload_toplayers()
 
-    #reveives all the guesses of the players, decides if guess was right and shall calculate points
-    #sends processed information back to the players in javascript
+    # reveives all the guesses of the players, decides if guess was right and shall calculate points
+    # also checks if a correct guess has been found already, so no points are distributed
+    # sends processed information back to the players in javascript
     def _on_guessingChannel_event(self, event=None):
         #TODO Delete me
         print('I went into "_on_guessing_Channel_events_" function...')
         print('I received the guess of the player, the guess is: %s' % (event.value['guess']))
 
-        #the guess that was send from a player
+        # the guess of the player
         guess = event.value['guess'].lower()
+        # id of the guessing player
         player_id_in_group = event.value['id']
 
-        #the current question (dictionaire)
-        question = self.session.vars['ql_' + str(self.round_number) + str(self.current_quest_num-1)] # you need the minus 1 because curr_quest is immediately in
-                                                                                                     # -cremented after sending the question out, so the current is actually curr_quest-1
+        # player object of the guessing player
+        player = self.get_player_by_id(player_id_in_group)
+
+        #the current question quizload (dictionaire)
+        question = self.session.vars['ql_' + str(self.round_number) + str(self.current_quest_num)]
+
+        # update the guess sequence of the player
+        #TODO: Use a better string operation
+        player.guess_sequence = player.guess_sequence + str(self.current_quest_num) + ':' + str(guess) + ';'
+        player.save()
+
         good_guess = False
-        # check if the guess is correct, if yes send respective information back to javascript
+        questionindex = 0
+        # check if the guess is correct, if yes and not answered correctly before, send respective information back to javascript
         for answernum in ['s1', 's2', 's3', 's4', 's5']:
             # e. g. question[s1] is a list with all the solutions for the correct word 1 of the current question
-            if guess in list(map(lambda x: x.lower(), question[answernum])):
+            if guess in list(map(lambda x: x.lower(), question[answernum])): #guess is correct
                 good_guess = True
-                self.send('guessInformations', {'guess': question[answernum][0], #send the exactly correct answer back, which is the 0 element of the list
-                                                'whichword': answernum,
-                                                'idInGroup': player_id_in_group,
-                                                'correct': True})
-                break
+                # check, if the question not has been answered correctly already
+                #TODO: do you find better solutions than this with the group vars?
+                if [self.s1_answered , self.s2_answered, self.s3_answered, self.s4_answered, self.s5_answered][questionindex] != True:
+                    #its the first time the question has been answered, so distribute point and send information to javascript
+                    self.send('guessInformations', {'guess': question[answernum][0], #send the exactly correct answer back, which is the 0 element of the list
+                                                    'whichword': answernum,
+                                                    'idInGroup': player_id_in_group,
+                                                    'correct': True})
+
+                    # give the player a point (save() is called in the function)
+                    player.inc_points()
+
+                    # give the group a point
+                    self.group_points += 1
+                    self.save()
+
+                    # update, so that the question cannot be answered again
+                    #TODO make this in nice please!
+                    if questionindex == 0:
+                        self.s1_answered = True
+                        self.save()
+                    elif questionindex == 1:
+                        self.s2_answered = True
+                        self.save()
+                    elif questionindex == 2:
+                        self.s3_answered = True
+                        self.save()
+                    elif questionindex == 3:
+                        self.s4_answered = True
+                        self.save()
+                    elif questionindex == 4:
+                        self.s5_answered = True
+                        self.save()
+
+                #TODO: note: with that design choice, if a question is answered correctly for the second time, just nothing happens
+                #TODO: there will be also nothing displayed in the group guess message board
+                else:
+                    # guess was correct, but that correct guess was already made before
+                    # do nothing, dont send anything out, dont distribute points
+                    pass
+            questionindex+=1
+
         # guess was not correct, send respective informations back
         if good_guess == False:
                 self.send('guessInformations', {'guess': guess,
                                                 'idInGroup': player_id_in_group,
                                                 'correct': False})
-
-
-
-
-
 
 
     def period_length(self):
@@ -162,6 +238,27 @@ class Group(RedwoodGroup):
 
 
 class Player(BasePlayer):
+
+        guess_sequence = models.CharField(initial='')
+
+        # number of correctly answered questions
+        points = models.IntegerField(initial=0)
+
+        # number of tries (guesses) of a player
+        num_guesses = models.IntegerField(initial=0)
+
+        def inc_num_guesses(self):
+            self.num_guesses += 1
+            self.save()
+
+
+        def inc_points(self):
+            self.points += 1
+            self.save()
+
+
+
+
 
         def initial_decision(self):
             return 0.5
