@@ -15,9 +15,9 @@ Parallel Family Feud
 
 class Constants(BaseConstants):
     name_in_url = 'firsttest'
-    players_per_group = None
+    players_per_group = 2
     num_rounds = 1
-    questions_per_round = 2
+    questions_per_round = 4
     secs_per_question = 50
     wait_between_question = 4
 
