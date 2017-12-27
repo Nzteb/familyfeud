@@ -47,16 +47,15 @@
 
 
     // Call the handle Guess function when the submitt button is clicked
-    var subButton = document.getElementById('subButton');
-    subButton.addEventListener('click', handleGuess, false);
-
+    var subButton = document.getElementById('subbutton');
+    subButton.addEventListener('click', handleGuess);
 
     //This function is called when the submitt button is clicked
     // It sends the guess over the guessing Channel to otree, therefore on_guessingchannel_event is called
     function handleGuess() {
         //TODO initialize the variables out of the function?
         //grap the input of the input form as a variable
-         var guessed = document.getElementById('guessField').value;
+         var guessed = document.getElementById('guessfield').value;
          var message = document.getElementById('message');
          var guessingChan = document.getElementById("guessingChannel");
 
@@ -78,9 +77,13 @@
     function instructions_after_guess(event){
         // if the guess was right
         if (event.detail.payload.correct == true){
+
             // reveal the correctly guessed word
             var correctguess = document.getElementById(event.detail.payload.whichword);
             correctguess.textContent = event.detail.payload.guess
+            //color the background green
+            correctguess.style.backgroundColor = "lightgreen"
+
 
             // display message for all players on message board
             var node = document.createElement("Li");
@@ -95,11 +98,9 @@
             node.appendChild(span1);
             document.getElementById("guesslist").appendChild(node);
 
-            // //scroll the div around the guesslist to the end, so always the newewst guess is displayed
+            //scroll the div around the guesslist to the end, so always the newewst guess is displayed
             var scrollme = document.getElementById('aroundguesslist');
             scrollme.scrollTop = scrollme.scrollHeight;
-
-
 
             // if the player is the who guessed correctly, tell him good job
             if (oTree.idInGroup == event.detail.payload.idInGroup){
@@ -107,7 +108,14 @@
                 message.textContent = 'Good Job!'
             }
 
-        // if the guess was wrong
+            // all words have been found, still, wait until the time is up, so the overall timing stays consistent
+            if (event.detail.payload.finished == true){
+                var message = document.getElementById('message')
+                message.textContent = 'Great you found all the questions. Please wait for the round to finish...'
+            }
+
+
+        // when the guess was wrong
         } else {
             // display message for all players on message board
             var node = document.createElement("Li");
@@ -132,11 +140,7 @@
                 var message = document.getElementById('message')
                 message.textContent = 'You tried: ' + event.detail.payload.guess + ' Try another word!'
             }
-
-
         }
-
-
     }
 
 
@@ -146,26 +150,41 @@
     // initializing the 40 + 5 seconds round of a question
     document.getElementById('questionChannel').addEventListener('event', receive_question);
     function receive_question(event){
+
+
         //if multiple family feud subrounds (more then 1 question) are played turn shown solutions to placeholders again
         var s1 =  document.getElementById('s1');
         s1.textContent = 'Word 1'
+        s1.style.backgroundColor = 'yellow'
         var s2 =  document.getElementById('s2');
         s2.textContent = 'Word 2'
+        s2.style.backgroundColor = 'yellow'
         var s3 =  document.getElementById('s3');
         s3.textContent = 'Word 3'
+        s3.style.backgroundColor = 'yellow'
         var s4 =  document.getElementById('s4');
         s4.textContent = 'Word 4'
+        s4.style.backgroundColor = 'yellow'
         var s5 =  document.getElementById('s5');
         s5.textContent = 'Word 5'
+        s5.style.backgroundColor = 'yellow'
+
+        // send to message board
+        document.getElementById('message').textContent = "Let's go"
 
         // display question
         var questiontag = document.getElementById('question')
         questiontag.textContent = event.detail.payload.question
 
+        //enable submitt button
+        document.getElementById("subbutton").disabled = false;
+
         //activate the round
         currtime = new Date().getTime()
         stoptime = currtime + (oTree.secsPerQuestion*1000)
         run_round(event,stoptime)
+
+
 
     }
 
@@ -175,11 +194,14 @@
        n = Math.floor((stoptime - currtime)/1000);
        document.getElementById('timer').textContent = 'Time left: ' + parseInt(n);
        // call function again every second until the time is up
-       if(n > 1 ) {
+       if(n > 0 ) {
            setTimeout( function() {run_round(anevent, stoptime);},1000)
+       //time is up
        }else {
-           //time is up, display all solutions
-           setTimeout(function () {display_all(anevent);}, 1000);
+           // disable the submitt button, so players cannot guess when the will be shown
+           document.getElementById("subbutton").disabled = true;
+           // display results
+           setTimeout(function () {display_all(anevent);}, 100);
            document.getElementById('timer').textContent = 'Round Done, please wait a moment ...'
 
        }
@@ -189,19 +211,25 @@
     //this is called from 'receive_question' 40 seconds after a question is displayed
     //TODO 02.012 ok and then after this wait 5 seconds and send next question to do this again basically
     function display_all(anevent){
+
         var s1 =  document.getElementById('s1');
         s1.textContent = anevent.detail.payload.s1[0]
+        s1.style.backgroundColor = 'lightgreen'
         var s2 =  document.getElementById('s2');
         s2.textContent = anevent.detail.payload.s2[0]
+        s2.style.backgroundColor = 'lightgreen'
         var s3 =  document.getElementById('s3');
         s3.textContent = anevent.detail.payload.s3[0]
+        s3.style.backgroundColor = 'lightgreen'
         var s4 =  document.getElementById('s4');
         s4.textContent = anevent.detail.payload.s4[0]
+        s4.style.backgroundColor = 'lightgreen'
         var s5 =  document.getElementById('s5');
         s5.textContent = anevent.detail.payload.s5[0]
+        s5.style.backgroundColor = 'lightgreen'
 
 
-        //wait 5 seconds and then let the first player in the group request oTree to send another question
+        //wait  'waitBetween' seconds and then let the first player in the group request oTree to send another question
         setTimeout( function() {request_question();}, oTree.waitBetween*1000)
 
 
@@ -210,7 +238,7 @@
     function request_question(){
         if (oTree.idInGroup == 1){
         var questionChan = document.getElementById("questionChannel");
-        //send to Otree, so otree sends a question back
+        //send to Otree, so otree sends a question back to 'receive_question', this activates a new round
         questionChan.send({some:'load'})
         }
     }
@@ -261,7 +289,7 @@
         #question{font-family: "Helvetica"; font-weight: bold;}
 
         /* overflow auto implements the scrolling behavior; auto scrolling to the end of the div is activated in 'instructions_after_guess' */
-        #aroundguesslist{overflow: auto; height: 420px; width: 300px; float: right}
+        #aroundguesslist{overflow: auto; height: 85%; width: 100%; float: right}
 
 
 
@@ -322,17 +350,17 @@
 
               <!-- Display a correct guess of the players -->
                <div id="wordholder">
-                   <p id='s1' style="border:1px; border-style:solid; padding-left: 6px";>Word 1</p>
-                   <p id='s2' style="border:1px; border-style:solid; padding-left: 6px";>Word 2</p>
-                   <p id='s3' style="border:1px; border-style:solid; padding-left: 6px";>Word 3</p>
-                   <p id='s4' style="border:1px; border-style:solid; padding-left: 6px";>Word 4</p>
-                   <p id='s5' style="border:1px; border-style:solid; padding-left: 6px";>Word 5</p>
+                   <p id='s1' style=" background:yellow; border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
+                   <p id='s2' style="background:yellow;border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
+                   <p id='s3' style="background:yellow;border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
+                   <p id='s4' style="background:yellow;border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
+                   <p id='s5' style="background:yellow;border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
                </div>
 
               <br>
 
               <!-- Display the players last guess and messages -->
-              <p id='message'>Let's go.</p>
+              <p id='message'>Load message board....</p>
 
               <br>
 
@@ -340,13 +368,13 @@
 
 
               <!-- Input form -->
-              <input id='guessField' type='text' maxlength='25' placeholder="Guess a word!" >
+              <input id='guessfield' type='text' maxlength='25' placeholder="Guess a word!" >
 
 
               <br><br>
 
               <!-- Button submitt input  -->
-              <button id='subButton' type='button' >Submitt your guess</button>
+              <button id='subbutton' type='button' >Submitt your guess</button>
 
 
               <br><br>

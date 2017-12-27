@@ -18,8 +18,8 @@ class Constants(BaseConstants):
     players_per_group = None
     num_rounds = 1
     questions_per_round = 2
-    secs_per_question = 60
-    wait_between_question = 4
+    secs_per_question = 30
+    wait_between_question = 5
 
 
 
@@ -83,6 +83,7 @@ class Subsession(BaseSubsession):
 
 
 class Group(RedwoodGroup):
+
 
     current_quest_num = models.IntegerField()
     s1_answered = models.BooleanField()
@@ -177,14 +178,8 @@ class Group(RedwoodGroup):
             # e. g. question[s1] is a list with all the solutions for the correct word 1 of the current question
             if guess in list(map(lambda x: x.lower(), question[answernum])): #guess is correct
                 good_guess = True
-                # check, if the question not has been answered correctly already
-                #TODO: do you find better solutions than this with the group vars?
+                # only take action and distribute points if the correct answer has not been guessed before
                 if [self.s1_answered , self.s2_answered, self.s3_answered, self.s4_answered, self.s5_answered][questionindex] != True:
-                    #its the first time the question has been answered, so distribute point and send information to javascript
-                    self.send('guessInformations', {'guess': question[answernum][0], #send the exactly correct answer back, which is the 0 element of the list
-                                                    'whichword': answernum,
-                                                    'idInGroup': player_id_in_group,
-                                                    'correct': True})
 
                     # give the player a point (save() is called in the function)
                     player.inc_points()
@@ -194,7 +189,7 @@ class Group(RedwoodGroup):
                     self.save()
 
                     # update, so that the question cannot be answered again
-                    #TODO make this in nice please!
+                    #TODO make this assignment nice, please!
                     if questionindex == 0:
                         self.s1_answered = True
                         self.save()
@@ -211,13 +206,33 @@ class Group(RedwoodGroup):
                         self.s5_answered = True
                         self.save()
 
+
+                    #Todo Delete me
+                    print([self.s1_answered , self.s2_answered, self.s3_answered, self.s4_answered, self.s5_answered])
+                    # determine, if now all possible answers have been found
+                    finished =  all([self.s1_answered , self.s2_answered, self.s3_answered, self.s4_answered, self.s5_answered])
+
+                    # send informations back to javascript, this activates 'instructions_after_guess()'
+                    self.send('guessInformations', {'guess': question[answernum][0], # send the exactly correct answer back, which is the 0 element of the list
+                                                    'whichword': answernum,
+                                                    'idInGroup': player_id_in_group,
+                                                    'correct': True,
+                                                    'finished': finished})
+
+
+                    print('thats finished' + str(finished))
+
+
                 #TODO: note: with that design choice, if a question is answered correctly for the second time, just nothing happens
                 #TODO: there will be also nothing displayed in the group guess message board
+                # guess was correct, but that correct guess was already made before
+                # do nothing, dont send anything out, dont distribute points
                 else:
-                    # guess was correct, but that correct guess was already made before
-                    # do nothing, dont send anything out, dont distribute points
                     pass
+                #we can break here, because this is the space where the guess was correct, so then no other of the answers has to be checked
+                break
             questionindex+=1
+
 
         # guess was not correct, send respective informations back
         if good_guess == False:
