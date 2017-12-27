@@ -103,7 +103,7 @@ SESSION_CONFIGS = [
     {
         'name': 'firsttest',
         'display_name': 'firsttestme',
-        'num_demo_participants': 2,
+        'num_demo_participants': 5,
         'app_sequence': ['firsttest'],
     }
 ]

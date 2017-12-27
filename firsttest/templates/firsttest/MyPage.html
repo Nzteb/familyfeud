@@ -37,6 +37,7 @@
       oTree.csrfToken = "{{ csrf_token }}";
       oTree.secsPerQuestion = {{ Constants.secs_per_question }}
       oTree.waitBetween = {{ Constants.wait_between_question }}
+      oTree.questionsPerRound = {{ Constants.questions_per_round }}
       {% if view.is_debug %}
       oTree.debug = true;
       {% else %}
@@ -207,7 +208,7 @@
        }
     }
 
-
+    var questions_left = oTree.questionsPerRound - 1;
     //this is called from 'receive_question' 40 seconds after a question is displayed
     //TODO 02.012 ok and then after this wait 5 seconds and send next question to do this again basically
     function display_all(anevent){
@@ -228,12 +229,22 @@
         s5.textContent = anevent.detail.payload.s5[0]
         s5.style.backgroundColor = 'lightgreen'
 
-
-        //wait  'waitBetween' seconds and then let the first player in the group request oTree to send another question
-        setTimeout( function() {request_question();}, oTree.waitBetween*1000)
-
-
+        //check if there is a question left otherwise go to the next page in oTree
+        if (questions_left == 0){
+            // family feud finished, wait and submitt page
+            setTimeout( function(){ submitt_nextbutton();}, oTree.waitBetween*1000)
+        }else{
+            //wait 'waitBetween' seconds and then let the first player in the group request oTree to send another question
+            setTimeout( function() {request_question();}, oTree.waitBetween*1000)
+        }
+        questions_left -= 1
     }
+
+
+    function submitt_nextbutton(){
+        document.getElementById('next').click()
+    }
+
     //if you play more then 1 question in a family feud subround
     function request_question(){
         if (oTree.idInGroup == 1){
@@ -329,89 +340,70 @@
 
       <!-- Template of the page -->
 
-
       <div id="wrapper">
 
+          <!-- main box on the left -->
+          <div id="middle">
 
-        <div id="middle">
+              <div id="centerthis">
 
+                  <p id="timer">Time left:</p>
 
-          <div id="centerthis">
-              <p id="timer">Time left:</p>
-
-
-
-                <!-- Display the question -->
-              <br><br>
-                <p id="question">Prepare for the first question ...</p>
+                  <!-- Display the question -->
+                  <br><br>
+                  <p id="question">Prepare for the first question ...</p>
 
 
+                  <!-- Display a correct guess of the players -->
+                   <div id="wordholder">
+                       <p id='s1' style=" background:yellow; border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
+                       <p id='s2' style="background:yellow;border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
+                       <p id='s3' style="background:yellow;border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
+                       <p id='s4' style="background:yellow;border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
+                       <p id='s5' style="background:yellow;border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
+                   </div>
+
+                   <br>
+
+                   <!-- Display the players last guess and messages -->
+                   <p id='message'>Load message board....</p>
+
+                   <br>
+
+                  <!-- Input form -->
+                  <input id='guessfield' type='text' maxlength='25' placeholder="Guess a word!" >
 
 
-              <!-- Display a correct guess of the players -->
-               <div id="wordholder">
-                   <p id='s1' style=" background:yellow; border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
-                   <p id='s2' style="background:yellow;border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
-                   <p id='s3' style="background:yellow;border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
-                   <p id='s4' style="background:yellow;border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
-                   <p id='s5' style="background:yellow;border:1px; border-style:solid; padding-left: 6px";>word is loaded ...</p>
-               </div>
+                  <br><br>
 
-              <br>
-
-              <!-- Display the players last guess and messages -->
-              <p id='message'>Load message board....</p>
-
-              <br>
+                  <!-- Button submitt input  -->
+                  <button id='subbutton' type='button' >Submitt your guess</button>
 
 
+                  <br><br>
 
-
-              <!-- Input form -->
-              <input id='guessfield' type='text' maxlength='25' placeholder="Guess a word!" >
-
-
-              <br><br>
-
-              <!-- Button submitt input  -->
-              <button id='subbutton' type='button' >Submitt your guess</button>
-
-
-              <br><br>
-
-
-
-
+              </div>
 
           </div>
 
+          <!-- the box on the right hand side-->
+          <div id="groupguesses">
 
-        </div>
+              <h4>Group Guesses</h4>
 
-        <div id="groupguesses">
-            <h4>Group Guesses</h4>
+            <!-- Display guesses of the other players -->
+              <br>
+              <div id="aroundguesslist">
+                  <ul id='guesslist' style="list-style: None"></ul>
+              </div>
 
+          </div>
 
-           <!-- Display guesses of the other players -->
-           <br>
-           <div id="aroundguesslist">
-            <ul id='guesslist' style="list-style: None"></ul>
-           </div>
-        </div>
       </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
+      <!-- hidden next button, is clicked after all question rounds -->
+      <button class="otree-btn-next btn btn-primary next-button otree-next-button" id="next" style="visibility: hidden" ></button>
 
 
 

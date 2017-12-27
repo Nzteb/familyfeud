@@ -15,14 +15,14 @@ Parallel Family Feud
 
 class Constants(BaseConstants):
     name_in_url = 'firsttest'
-    players_per_group = None
+    players_per_group = 5
     num_rounds = 1
     questions_per_round = 2
     secs_per_question = 30
-    wait_between_question = 5
+    wait_between_question = 4
 
 
-
+    #sample questions, will be overwritten #TODO: ....
     quizload = [
                 {'question':"Name a Place You Visit Where You Aren't Allowed to Touch Anything",
                    's1': ["Museum gallery",'Museum', 'Gallery', 'Museum gallery'],
@@ -240,16 +240,14 @@ class Group(RedwoodGroup):
                                                 'idInGroup': player_id_in_group,
                                                 'correct': False})
 
-
+    #TODO can you just leave out the period length function?
     def period_length(self):
-        #TODO delete me
-        print('I went into the "period_length" funcion...')
-        # determine time in seconds before the game is left and the next page is displayed
-        # TODO: could it be that javascript is slower and the game is aborted before it is finished?
-        return (Constants.questions_per_round) * ((Constants.secs_per_question + Constants.wait_between_question)-1) # TODO: with the minus one we assume
-                                                                                                                     # that javascript does not slow down at all
-                                                                                                                     # then we abort the game 1 second before the
-                                                                                                                     # next question is displayed
+        # take overall time * 10 so that oTree redwood, cannot abort the game, page submission is done in javascript
+        # the reason is that, with multible rounds the overall time taken for the family feud game might not been exactly the same
+        return ((Constants.questions_per_round) * ((Constants.secs_per_question + Constants.wait_between_question)))*10
+
+
+
 
 
 class Player(BasePlayer):
