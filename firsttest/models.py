@@ -15,10 +15,10 @@ Parallel Family Feud
 
 class Constants(BaseConstants):
     name_in_url = 'firsttest'
-    players_per_group = 5
+    players_per_group = None
     num_rounds = 1
     questions_per_round = 2
-    secs_per_question = 30
+    secs_per_question = 50
     wait_between_question = 4
 
 
@@ -268,9 +268,6 @@ class Player(BasePlayer):
         def inc_points(self):
             self.points += 1
             self.save()
-
-
-
 
 
         def initial_decision(self):
