@@ -5,6 +5,7 @@ from otree.api import (
 
 from otree_redwood.models import Group as RedwoodGroup
 import random
+import csv
 
 author = 'Patrick Betz'
 
@@ -18,43 +19,23 @@ class Constants(BaseConstants):
     players_per_group = 2
     num_rounds = 1
     questions_per_round = 4
-    secs_per_question = 50
+    secs_per_question = 40
     wait_between_question = 4
 
+    with open('data.csv') as f:
+        questions = list(csv.reader(f))
 
-    #sample questions, will be overwritten #TODO: ....
-    quizload = [
-                {'question':"Name a Place You Visit Where You Aren't Allowed to Touch Anything",
-                   's1': ["Museum gallery",'Museum', 'Gallery', 'Museum gallery'],
-                   's2': ['Zoo', 'Animal'],
-                   's3': ["Gentleman's club", 'Gentleman club', 'Stripclub', 'Strip club'],
-                   's4': ['Baseball'],
-                   's5': ['China shop']},
-
-                {'question': "Name an Article of Clothing You Can't Wash in the Washing Machine",
-                 's1': ['Shoe','Shoes'],
-                 's2': ['Bra'],
-                 's3': ['Hat'],
-                 's4': ['Coat'],
-                 's5': ['Sweater']},
-
-                {'question': "Name Something People Are Often Chased by in Movies",
-                 's1': ['Monsters', 'Monster'],
-                 's2': ['Cars', 'Car'],
-                 's3': ['Cops', 'Cop','Police'],
-                 's4': ['Bad Guys' , 'Bad Guy'],
-                 's5': ['Dogs', 'Dog']},
-
-                {'question': "Name Something That a Man Had Better Not Take Along on His Honeymoon",
-                 's1': ['Another Woman'],
-                 's2': ['Work', 'Laptop'],
-                 's3': ['His Parents', 'Parents'],
-                 's4': ['His Best Friend','Best Friend','Friend'],
-                 's5': ['Pet']},
-
-
-
-    ]
+    # Questions comes as a list and will be formatted in a list of dics in creating session
+    # Example format how to deal with questions in the code:
+    # (The respective first answer is the desired answer, which will be displayed)
+    # quizload = [
+    #             {'question':"Name a Place You Visit Where You Aren't Allowed to Touch Anything",
+    #                's1': ["Museum gallery",'Museum', 'Gallery', 'Museum gallery'],
+    #                's2': ['Zoo', 'Animal'],
+    #                's3': ["Gentleman's club", 'Gentleman club', 'Stripclub', 'Strip club'],
+    #                's4': ['Baseball'],
+    #                's5': ['China shop']},  {...}, ...
+    #              ]
 
 
 
@@ -62,20 +43,30 @@ class Subsession(BaseSubsession):
 
     #remember: this function is seperately called for every oTree round when one clicks creating session
     def creating_session(self):
+        #TODO:Delete me
         print('creating session..')
 
-        #copy the list of questions to alter it when drawing from it
-        quizload = Constants.quizload.copy()
+        quizload = []
+        # Format question data into quizload
+        #TODO: Looping over a list of 100 before the session starts should be fine right..
+        for question in Constants.questions:
+            quizload.append({'question': question[0],
+                             's1': question[1].split('*'),
+                             's2': question[2].split('*'),
+                             's3': question[3].split('*'),
+                             's4': question[4].split('*'),
+                             's5': question[5].split('*'), })
+
         questions_per_round = Constants.questions_per_round
 
-        # distribute all the questions randomly over the rounds and subquestions (if multiple questions per round)
-        # only distribute the all the questions for all the round at the function call of round 1
+        # Distribute all the questions needed randomly over the rounds and subquestions (if multiple questions per round)
+        # Distribute  questions for all rounds at the function call of round 1
         if self.round_number == 1:
             for round_num in range(1,Constants.num_rounds+1):
                     for question_num in range(1,questions_per_round+1):
                         question = random.choice(quizload)
                         quizload.remove(question)
-                        # hold the quizload of the question in session.vars to access later
+                        # Save the quizload of the question in session.vars to access later
                         # ql_11 e.g. means quizload for round 1 question 1
                         self.session.vars['ql_' + str(round_num) + str(question_num)] = question
 
