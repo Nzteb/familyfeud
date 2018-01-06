@@ -43,25 +43,24 @@ class Subsession(BaseSubsession):
 
     #remember: this function is seperately called for every oTree round when one clicks creating session
     def creating_session(self):
-        #TODO:Delete me
-        print('creating session..')
-
-        quizload = []
-        # Format question data into quizload
-        #TODO: Looping over a list of 100 before the session starts should be fine right..
-        for question in Constants.questions:
-            quizload.append({'question': question[0],
-                             's1': question[1].split('*'),
-                             's2': question[2].split('*'),
-                             's3': question[3].split('*'),
-                             's4': question[4].split('*'),
-                             's5': question[5].split('*'), })
-
-        questions_per_round = Constants.questions_per_round
-
         # Distribute all the questions needed randomly over the rounds and subquestions (if multiple questions per round)
         # Distribute  questions for all rounds at the function call of round 1
         if self.round_number == 1:
+
+            quizload = []
+            # Format question data into quizload
+            # TODO: Looping over a list of about 100 before the session starts should be fine right..
+            for question in Constants.questions:
+                quizload.append({'question': question[0],
+                                 's1': question[1].split('*'),
+                                 's2': question[2].split('*'),
+                                 's3': question[3].split('*'),
+                                 's4': question[4].split('*'),
+                                 's5': question[5].split('*'), })
+
+            questions_per_round = Constants.questions_per_round
+
+
             for round_num in range(1,Constants.num_rounds+1):
                     for question_num in range(1,questions_per_round+1):
                         question = random.choice(quizload)

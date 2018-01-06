@@ -8,7 +8,7 @@
 {% block scripts %}
   <script>
 
-
+    // Stackoverflow:
     //this prevents that pressing enter will automatically submitt the page and abort the game for a player
     $(document).on("keypress", 'form', function (e) {
     var code = e.keyCode || e.which;
@@ -19,6 +19,18 @@
         return false;
     }
 });
+
+    //Stackoverflow:
+    // Make pressing enter to submitt the guess
+    //TODO this might be blocked from the above code?
+    document.getElementById("guessfield")
+    .addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        document.getElementById("subbutton").click();
+    }
+});
+
 
 
 
@@ -54,9 +66,12 @@
     //This function is called when the submitt button is clicked
     // It sends the guess over the guessing Channel to otree, therefore on_guessingchannel_event is called
     function handleGuess() {
-        //TODO initialize the variables out of the function?
         //grap the input of the input form as a variable
          var guessed = document.getElementById('guessfield').value;
+         //empty the input field
+         var field = document.getElementById('guessfield');
+         field.value = '';
+
          var message = document.getElementById('message');
          var guessingChan = document.getElementById("guessingChannel");
 
@@ -67,9 +82,6 @@
             guessingChan.send({guess: guessed, id: oTree.idInGroup})
         }
     }
-
-
-
 
 
     // Receives information over channel from 'on_guessingChannel_event' in oTree after the guess is processed there
@@ -86,8 +98,7 @@
             correctguess.style.background = 'linear-gradient(lightgreen, limegreen)'
 
 
-
-            // display message for all players on message board
+            // display message about the guess for all players on message board
             var node = document.createElement("Li");
             var span1 = document.createElement("span")
             var textnode=document.createTextNode("A player found ");
@@ -100,7 +111,7 @@
             node.appendChild(span1);
             document.getElementById("guesslist").appendChild(node);
 
-            //scroll the div around the guesslist to the end, so always the newewst guess is displayed
+            //scroll the div holding the guesslist to the end, so always the newewst guess is displayed
             var scrollme = document.getElementById('aroundguesslist');
             scrollme.scrollTop = scrollme.scrollHeight;
 
@@ -115,7 +126,6 @@
                 var message = document.getElementById('message')
                 message.textContent = 'Great! your group found all the questions. Please wait for the round to finish...'
             }
-
 
         // when the guess was wrong
         } else {
@@ -144,8 +154,6 @@
             }
         }
     }
-
-
 
 
     //sending a new question to from oTree to the players
@@ -238,7 +246,7 @@
         questions_left -= 1
     }
 
-
+    //this will abort the game and move to the next oTree page is called from display_all()
     function submitt_nextbutton(){
         document.getElementById('next').click()
     }
@@ -294,7 +302,7 @@
             height: 550px;
             overflow: hidden; /* if you don't want #groupguesses to wrap below #first */
             border-radius: 15px;
-            background: linear-gradient(white, #CEE3F6)
+            background: #CEE3F6
 
         }
 
@@ -401,16 +409,12 @@
                   </div>
 
 
-
                   <!-- Word placeholders in middle-->
-
                   <p id='s1' style="text-align:center;border-radius: 5px;background:linear-gradient(lightyellow, yellow); border:1px; border-style:solid; padding-left: 6px";>Word is loaded ...</p>
                   <p id='s2' style="text-align:center;border-radius: 5px;background:linear-gradient(lightyellow, yellow);border:1px; border-style:solid; padding-left: 6px";>Word is loaded ...</p>
                   <p id='s3' style="text-align:center;border-radius: 5px;background:linear-gradient(lightyellow, yellow);border:1px; border-style:solid; padding-left: 6px";>Word is loaded ...</p>
                   <p id='s4' style="text-align:center;border-radius: 5px;background:linear-gradient(lightyellow, yellow);border:1px; border-style:solid; padding-left: 6px";>Word is loaded ...</p>
                   <p id='s5' style="text-align:center;border-radius: 5px;background:linear-gradient(lightyellow, yellow);border:1px; border-style:solid; padding-left: 6px";>Word is loaded ...</p>
-
-
 
 
                   <!-- Messageboard -->
@@ -426,7 +430,7 @@
                         <input id='guessfield' type='text' maxlength='25' placeholder="Guess a word!">
                         <br><br>
                         <!-- Button submitt input  -->
-                        <button id='subbutton' type='button' >Submitt your guess</button>
+                        <button id='subbutton' type='button'>Submitt your guess</button>
                   </div>
 
               </div>
