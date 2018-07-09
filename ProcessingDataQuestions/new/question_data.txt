@@ -1,0 +1,391 @@
+<?php
+
+$qs[1]="Name something that you associate with Egypt...";	
+$qs[2]="Name a kind of food that gets stuck between your teeth";
+$qs[3]="Name an occupation whose people have big egos...";
+$qs[4]="Name a place in front of which people double park for a minute...";
+$qs[5]="Name something you don't do as much of in cold weather...";
+$qs[6]="Name a food you wouldn't eat with your fingers...";
+$qs[7]="Name something you see in every deli...";
+$qs[8]="Past or present, name a famous artist...";
+$qs[9]="Name something you might forget in a restaurant...";
+$qs[10]="Name something in the house that is very difficult to move...";
+
+$ans[1]="Pyramids,Sphinx,Camels,Nile River,Desert";
+$ans[2]="Corn,Meat,Spinach,Caramel,Nuts";
+$ans[3]="Actor,Attorney,Physician,Politician,Pro Athlete";
+$ans[4]="Post Office,Store,Bank,Hospital,Dry Cleaners";
+$ans[5]="Garden,Swim,Walk/Run,Cookout,Sunbathe";
+$ans[6]="Spaghetti,Soup,Mashed Potatoes,Ice Cream,Pudding";
+$ans[7]="Meat,Pickles,Cheese,Bread,Potato Salad";
+$ans[8]="Pablo Picasso,Vincent van Gogh,Leonardo da Vinci,Michelangelo,Rembrandt van Rijn";
+$ans[9]="Purse/Wallet,Coat,To Leave A Tip,Hat,Umbrella";
+$ans[10]="Refrigerator,Piano,Couch,Bed,Dresser";
+
+$tgs[1]="Pyramid,Sphinx*Sphynx,Camel,Nile*River,Desert*Dessert*Sand";
+$tgs[2]="Corn,Meat*Turkey*Beef*Pork*Chicken*Lamb,Spinach*Spinich,Caramel*Carimel*Caramal,Nut*Peanut*Cashew*Almond*Walnut*Chestnut";
+$tgs[3]="Actor*Actress*Hollywood*Movie,Attorney*Lawyer*Prosecutor*Prosecuter,Physician*Doc*Surgeon*Medic,Politic*Diplomat,Athlete*Baseball*Basketball*Football*Hockey*Player";
+$tgs[4]="Post*Mail,Store,Bank,Hospital,Cleaner";
+$tgs[5]="Garden,Swim*Pool,Walk*Stroll*Hike*Run,Cookout*Grill*Barbecue*BBQ,Tan*Sunbathe";
+$tgs[6]="Spaghetti*Noodle*Spagetti*Spahgetti*Spagheti*Spageti,Soup,Mashed,Ice Cream*IceCream,Pudding";
+$tgs[7]="Meat*Turkey*Ham*Beef*Chicken*Pork*Lamb,Pickle,Cheese,Bread,Potato";
+$tgs[8]="Picasso*Picaso*Piccaso*Piccasso,Vangogh*Vangoh*Van gogh*Van goh,Leonardo*Vinci*Vinchi,Michelangelo*Michaelangelo,Rembrandt*Rembrant";
+$tgs[9]="Purse*Wallet*Walett,Coat*Jacket,Tip,Hat,Umbrella";
+$tgs[10]="Refrig*Fridge,Piano,Couch*Sofa*Armchair,Bed*Mattress*Matress*Mattres,Dresser*Armoir*Cadenza"; 
+
+$qs[11]="Name a big animal with a short tail...";
+$qs[12]="Name something you'd take with you for an afternoon in the park...";
+$qs[13]="Name something measured by the spoonful...";
+$qs[14]="Name an occasion after which people suffer a little let down...";
+$qs[15]="Name a crunchy food...";
+$qs[16]="Name something that has a long life...";
+$qs[17]="Name a sound that frightens people...";
+$qs[18]="Name something to which people's skin might be overly sensitive...";
+$qs[19]="Name a sport in which good eyesight is important...";
+$qs[20]="Name something that melts easily...";
+
+$ans[11]="Elephant,Bear,Giraffe,Pig,Rhino";
+$ans[12]="Picnic,Blanket,Book,Radio/Music,Frisbee";
+$ans[13]="Sugar,Medicine,Salt,Coffee,Baking Soda";
+$ans[14]="Wedding,Christmas,Birthday,Birth of Baby,Graduation";
+$ans[15]="Chips,Celery,Carrots,Cereal,Popcorn";
+$ans[16]="Turtle,Tree,Elephant,Battery,People";
+$ans[17]="Thunder,Siren,Gunshot,Scream,Howl";
+$ans[18]="Sun,Soap,Makeup,Perfume,Wool";
+$ans[19]="Baseball,Tennis,Archery,Golf,Hunting";
+$ans[20]="Butter,Ice Cream,Snow,Cheese,Chocolate";
+
+$tgs[11]="Elephant,Bear,Giraffe*Girrafe,Pig,Rhino";
+$tgs[12]="Picnic*Pic-nic*Pic nic,Blanket,Book*Magazine*Read*Newspaper,Radio*Music*MP3*Ipod*CD*Stereo,Frisbee*Disc*Friz";
+$tgs[13]="Sugar,Medic,Salt,Coffee*Cofee,Baking Soda";
+$tgs[14]="Wedding*Marriage*Marry,Christmas,Birthday*Birth Day,Childbirth*Baby,Graduat*Commencement";
+$tgs[15]="Chip*Crisp,Celery,Carrot,Cereal,Popcorn";
+$tgs[16]="Turtle*Tortoise,Tree,Elephant,Battery,Person*People*Human";
+$tgs[17]="Thunder*Lightning,Siren*Police,Gun,Scream*Yell,Howl*Wolf";
+$tgs[18]="Sun,Soap*Shampoo,Makeup*Cosmetic*Make-up*Make up,Perfume*Cologn,Wool";
+$tgs[19]="Baseball,Tennis,Archer*Arrow,Golf,Hunt*Shoot";
+$tgs[20]="Butter,IceCream*Ice Cream*Ice-Cream,Snow,Cheese,Choco";
+
+
+$qs[21]="Name something you keep in your car in case of emergency on the road...";
+$qs[22]="Name an activity or occupation in which you would use a whistle...";
+$qs[23]="Name a food you pack for the beach...";
+$qs[24]="Name a reason why you pull over to the side of the highway...";
+$qs[25]="Name an activity from which people come home with sore feet...";
+$qs[26]="Name something from home that people take with them on long trips...";
+$qs[27]="Name a formerly serious ailment that is easily cured or prevented now...";
+$qs[28]="Name a place where people \"Check In\"...";
+$qs[29]="Name a fictional character with enormous strength...";
+$qs[30]="Name something used only in winter...";
+
+$ans[21]="Flashlight,Flares,Spare,Jack,First Aid Kit";
+$ans[22]="Referee,Police,Coach,Gym Teacher,Lifeguard";
+$ans[23]="Sandwiches,Chips,Chicken,Hot Dogs,Fruit";
+$ans[24]="Flat Tire,Siren,Breakdown,Read Map,Feel Tired";
+$ans[25]="Shopping,Running,Dancing,Hiking,Sightseeing";
+$ans[26]="Pillow,Clothing,Luggage,Camera,Pet";
+$ans[27]="Polio,Pneumonia,Tuberculosis,Flu,Measles";
+$ans[28]="Hotel,Hospital,Airport,Doctor's Office,Work";
+$ans[29]="Hercules,Samson,Atlas,Superman,Incredible Hulk";
+$ans[30]="Snow Shovel,Sled,Coat,Gloves,Snowmobile";
+
+$tgs[21]="Flash light*Flash-light*Flashlight,Flare*Torch,Spare*Tire,Jack,First Aid*First-Aid*FirstAid";
+$tgs[22]="Ref*Ump,Police*Cop,Coach,Gym,Lifeguard*Life guard*Life-guard";
+$tgs[23]="Sandwich*Sand-wich*Sandwitch,Chip,Chick,Hot Dog*HotDog*Hot-Dog,Fruit";
+$tgs[24]="Flat,Siren*Police*Cop*Ambulance*Fire,Break*Broke,Map*Lost*Directions,Tired*Sleepy*Fatigue";
+$tgs[25]="Shop,Run,Danc,Hik,Sightsee*Tour";
+$tgs[26]="Pillow*Cushion,Cloth,Luggage*Bag*Suitcase,Camera,Pet*Dog*Cat*Hamster";
+$tgs[27]="Polio,Pneumonia*Neumonia*Nimonia*Nemonia*Namonia*Pnimonia*Pnamonia,Tuber*TB,Flu,Measle*Meesle";
+$tgs[28]="Hotel*Motel*Lodge,Hospital*ER,Airport,Doc,Work*Office";
+$tgs[29]="Herc,Samson,Atlas,Superman*Super-man*Super man,Hulk";
+$tgs[30]="Shovel,Sled,Coat*Jacket,Glove,Snowmobil*Snow-mobil*Snow mobil";
+
+$qs[31]="Name something your body needs...";
+$qs[32]="Name something you see in front of schools...";
+$qs[33]="Name an animal that might weigh more than 1,000 pounds...";
+$qs[34]="Name something you eat that makes you thirsty";
+$qs[35]="Name a mountain chain...";
+$qs[36]="Name a state that was part of the confederacy during the U.S. Civil War...";
+$qs[37]="Name a food recognizable by its odor...";
+$qs[38]="Name the musical instrument which sounds worst, played by a beginner...";
+$qs[39]="Name a kind of person you never questioned when you were a child...";
+$qs[40]="Name the first sign that you're getting a cold...";
+
+$ans[31]="Water,Food,Oxygen,Exercise,Calcium";
+$ans[32]="Flag,Children,Buses,Crossing Guard,School Name";
+$ans[33]="Elephant,Rhino,Whale,Hippo,Bear";
+$ans[34]="Popcorn,Potato Chips,Ham,Peanuts,Pizza";
+$ans[35]="Rockies,Alps,Appalachians,Smokies,Andes";
+$ans[36]="Georgia,Virginia,Mississippi,Alabama,South Carolina";
+$ans[37]="Onions,Fish,Garlic,Pizza,Cabbage";
+$ans[38]="Violin,Trumpet,Clarinet,Tuba,Piano";
+$ans[39]="Teacher,Parent,Religious Authority,Police,Principal";
+$ans[40]="Runny Nose,Sneezing,Sore Throat,Headache,Stuffed Up";
+
+$tgs[31]="Water,Food,Oxygen*Air,Activity*Exercis*Aerob,Calcium";
+$tgs[32]="Flag,Child*Kid*Student,Bus,Crossing*Guard*Patrol,Name*Sign";
+$tgs[33]="Elephant,Rhino*Rino,Whale*Wale,Hippo,Bear";
+$tgs[34]="Popcorn*Pop-corn*Pop corn,Chip,Ham,Peanut,Pizza";
+$tgs[35]="Rock,Alp,Appalachian*Appilachian*Apalachian*Appleachian,Smok,Ande";
+$tgs[36]="Georgia,Virginia,Mississippi*Misisipi*Missisippi*Misissippi*Mississipi,Alabama,South Carolina";
+$tgs[37]="Onion,Fish*Tuna,Garlic,Pizza,Cabbage";
+$tgs[38]="Violin,Trump,Clarinet,Tuba,Piano";
+$tgs[39]="Teach,Parent*Mom*Dad*Mother*Father,Priest*Rabbi*Pastor*Reverend*Monk,Police*Cop,Principal";
+$tgs[40]="Runny*Sniff*Drip,Sneez,Throat,Headache*Head-ache*Head ache,Congest*Stuff";
+
+$qs[41]="Name a place where you would see lots of flowers...";
+$qs[42]="Name a bird...";
+$qs[43]="Name a place where people daydream...";
+$qs[44]="Name a place that sometimes doesn't allow dogs...";
+
+$qs[45]="Name something you eat by the slice...";
+$qs[46]="Name something that kids do when they skip school...";
+$qs[47]="Name something you ask a waiter/waitress for...";
+$qs[48]="Name an occasion when a teenager wears his or her best clothes...";
+$qs[49]="Name something you associate with Hawaii...";
+$qs[50]="Name a food you buy more than one of at a time...";
+
+$ans[41]="Florist,Funeral,Garden,Wedding,Park";
+$ans[42]="Robin,Eagle,Parrot,Cardinal,Bluebird";
+$ans[43]="Work,School,Park,Bathroom,Church";
+$ans[44]="Restaurant,Apartment Building,Hotel,Park,Store";
+$ans[45]="Bread,Pizza,Cake,Pie,Cheese";
+$ans[46]="Go To Movies,Go To Mall,Watch TV,Go To Beach,Play Video Games";
+$ans[47]="Water,Coffee,Ketchup,Check,Menu";
+$ans[48]="Prom,Date,Graduation,Church,Wedding";
+$ans[49]="Lei,Pineapple,Hula Dancers,Beach,Luau";
+$ans[50]="Potatoes,Eggs,Apples,Bananas,Grapes";
+
+$tgs[41]="Florist*Flowershop*Flower Shop,Funeral*Wake,Garden,Wedding*Marr,Park";
+$tgs[42]="Robin,Eagle,Parrot*Parrott*Parott*Parot,Card,Blue";
+$tgs[43]="Work*Office,School*Class,Park,Bath*Restroom*Toilet*Shower,Church*Synagogue*Temple*Sermon";
+$tgs[44]="Restaurant*Diner,Apartment*Condo,Hotel*Motel*Lodge,Park,Store*Grocery*Mall";
+$tgs[45]="Bread,Pizza,Cake,Pie,Cheese";
+$tgs[46]="Movie*Cinema*Theater*Theatre,Mall,TV*Television*Teevee*T.V,Beach,Video Games*Xbox*Wii*Playstation*Video-games";
+$tgs[47]="Water,Coffee,Ketchup*Catsup,Check*Bill*Tab,Menu";
+$tgs[48]="Prom,Date,Graduat,Church*Temple,Wedding*Marr";
+$tgs[49]="Lei*Lay*Lie*Lae*Lea,Pineapple*Pine-apple*Pine apple,Hula,Beach*Sand*Ocean,Lua*Lau*Loo";
+$tgs[50]="Potat,Egg,Apple,Banana*Bannana*Bananna,Grape";
+
+$qs[51]="Name something that's hardest to do the first time you try it...";
+$qs[52]="Name a food people eat and then regret later...";
+$qs[53]="Name something that goes \"Boom!\"...";
+$qs[54]="Name an animal that likes to poke around in your garbage late at night...";
+$qs[55]="Name something that puts people to sleep...";
+$qs[56]="Name something you buy frozen...";
+$qs[57]="Besides \"King\" & \"Queen,\" name a title some people have in England...";
+$qs[58]="Name an ingredient in meat loaf, besides meat...";
+$qs[59]="Name something that is easy to do forwards, but hard backwards...";
+$qs[60]="Besides clothing, name something you wash by hand...";
+
+$ans[51]="Ride a Bicycle,Ski,Drive,Skate,Swim";
+$ans[52]="Onions,Chili,Beans,Ice Cream,Peppers";
+$ans[53]="Cannon,Fireworks,Thunder,Bomb,Sonic Boom";
+$ans[54]="Raccoon,Dog,Cat,Possum,Skunk";
+$ans[55]="Medication,Reading,Music,TV,Milk";
+$ans[56]="Ice Cream,Vegetables,TV Dinner,Pizza,Fish";
+$ans[57]="Prince,Duke,Sir,Lord,Duchess";
+$ans[58]="Eggs,Bread Crumbs,Onion,Tomato,Ketchup";
+$ans[59]="Walk,Run,Drive,Write,Skate";
+$ans[60]="Dishes,Car,Crystal,Body,Pets";
+
+$tgs[51]="Bike*Bic,Ski,Drive*Car,Skate,Swim";
+$tgs[52]="Onion,Chile*Chili*Chilli*Chilly,Bean,IceCream*Ice Cream*Ice-Cream,Pepp";
+$tgs[53]="Canon*Cannon*Canonn*Cannonn,Firework*Firecra,Thunder*Lightning,Bomb,Sonic";
+$tgs[54]="Rac,Dog,Cat,Poss*Oposs,Skunk";
+$tgs[55]="Medic,Read*Book*Magaz,Music*Tunes,TV*Television*Teevee*T.V,Milk";
+$tgs[56]="IceCream*Ice Cream*Ice-Cream,Veg,TV Din*T.V. Din,Pizza,Fish";
+$tgs[57]="Prince,Duke,Sir*Knight,Lord,Duches";
+$tgs[58]="Egg,Bread*Crum,Onion,Tomato,Ketchup*Catsup";
+$tgs[59]="Walk,Run,Drive*Car,Write,Skate";
+$tgs[60]="Dish,Car*Truck,Crystal,Body,Pet*Dog*Cat";
+
+
+$qs[61]="Name something you'd wear even if it has a hole in it...";
+$qs[62]="Name something that happens at every child's birthday party...";
+$qs[63]="Name a food that you boil in a big pot...";
+$qs[64]="Name something made for the mouth...";
+$qs[65]="Name an occupation whose workers should know CPR...";
+$qs[66]="Give me another word for \"Meathead\"...";
+$qs[67]="Besides candy name something that might have a chocolate covering...";
+$qs[68]="Name the college selected by the brightest students...";
+$qs[69]="Name something people carry in their hands as they board airplanes...";
+$qs[70]="Name something specific which people clean for a living...";
+
+$ans[61]="Sock,Jeans,Underwear,Shoe,Sweater";
+$ans[62]="Blow Out Candles,Eat Cake,Sing Happy Birthday,Spill Things,Play Games";
+$ans[63]="Pasta,Soup,Potatoes,Chicken,Corn";
+$ans[64]="Braces,Toothbrush,Dentures,Lipstick,Toothpaste";
+$ans[65]="Paramedic,Nurse,Firefighter,Ambulance Driver,Lifeguard";
+$ans[66]="Dummy,Stupid,Idiot,Dumbbell,Jerk";
+$ans[67]="Cake,Ice Cream,Cookies,Nuts,Raisins";
+$ans[68]="Harvard,Yale,MIT,Stanford,UCLA";
+$ans[69]="Ticket,Carry On,Book,Camera,Purse";
+$ans[70]="Carpets,Houses,Cars,Windows,Clothes";
+
+$tgs[61]="Sock*Sox,Jean*Denim,Boxers*Briefs*Panties*Under,Shoe*Boot,Sweater";
+$tgs[62]="Candle,Cake,Sing,Spill*Mess*Dirt,Game*Play";
+$tgs[63]="Pasta*Spag*Macar,Soup,Potato,Chick*Chik,Corn";
+$tgs[64]="Brace,Toothbrush*Tooth-brush,Denture*Fake,Lipstick*Lipbalm*Lipgloss,Paste";
+$tgs[65]="Paramed*EMT,Nurse,Fire,Ambulance,Lifeguard*Life-guard*Life guard";
+$tgs[66]="Dumm,Stup,Idiot,Bell,Jerk";
+$tgs[67]="Cake,IceCream*Ice Cream*Ice-Cream,Cookie,Nut,Rais";
+$tgs[68]="Harvard,Yale,MIT*M.I.T,Stanf,UCLA*U.C.L.A";
+$tgs[69]="Tick*Tix*Pass,Bag*Backpack*Carry on*Carry-on,Book*Magaz,Camera,Purse";
+$tgs[70]="Carpet*Rug,House*Home,Car,Window,Cloth";
+
+
+$qs[71]="Name something you use often, that's always breaking down...";
+$qs[72]="Name something about commercial air travel worse now than 10 years ago...";
+$qs[73]="Name something people give to celebrities to autograph...";
+$qs[74]="Name something you wish you could do faster...";
+$qs[75]="Name something that can give you blisters...";
+$qs[76]="Name something people cut...";
+$qs[77]="Name the filling you hope for when you bite into a chocolate...";
+$qs[78]="Name the most indispensable electric kitchen appliance...";
+$qs[79]="Name a kind of place that can be very romantic...";
+$qs[80]="Name something that lets off steam...";
+
+$ans[71]="Car,Lawn Mower,Vacuum Cleaner,Copier,Dishwasher";
+$ans[72]="Price,Delay,Food,Terrorism,Crowds";
+$ans[73]="Napkin,Photo,Program,Blank Paper,Book";
+$ans[74]="Type,Work,Read,Run,Lose Weight";
+$ans[75]="Shoes,Gardening,Shoveling,Fire,Sweeping";
+$ans[76]="Hair,Meat,Paper,Wood,Grass";
+$ans[77]="Caramel,Nuts,Chocolate,Liquid Cherry,Nougat";
+$ans[78]="Can Opener,Coffee Maker,Toaster,Microwave,Refrigerator";
+$ans[79]="Beach,Restaurant,Tropical Island,Cruise,Park";
+$ans[80]="Teakettle,Clothes Iron,Train,Pressure Cooker,Steam Engine";
+
+$tgs[71]="Car*Truck,Mower,Vac,Copy*Copier*Xerox*Zerox,Dish";
+$tgs[72]="Price*Cost,Delay*Wait,Food,Terror,Crowd";
+$tgs[73]="Napk*Tissue,Photo*Pic,Program,Paper,Book";
+$tgs[74]="Type,Work,Read,Run,Fit*Exercise*Weight";
+$tgs[75]="Shoe*Boot,Garden,Shovel,Fire*Heat*Burn,Sweep*Broom";
+$tgs[76]="Hair,Meat*Beef*Chick*Turk*Pork,Paper,Wood*Lumber*Tree,Grass*Lawn*Yard";
+$tgs[77]="Caramel*Carmel*Carimel*Caramal,Nut,Choc,Cherry,Noug*Nug*Noog";
+$tgs[78]="Can Open*Can-Open,Coffee,Toast,Micro,Refrig*Fridge";
+$tgs[79]="Beach*Shore*Ocean,Restaurant,Tropic*Isl,Cruise*Ship*Boat,Park";
+$tgs[80]="Tea*Kettle,Iron,Train,Pressure Cooker*Pressure-Cooker,Engine";
+
+$qs[81]="Name something people can inherit genetically from their parents...";
+$qs[82]="Name an occupation in which you think there's a large divorce rate...";
+$qs[83]="Name something kids imitate the sound of...";
+$qs[84]="Name a kind of candy that comes in different colors...";
+$qs[85]="Name a family dinner you'd never serve to company...";
+$qs[86]="Name something Switzerland is famous for...";
+$qs[87]="Name a physical characteristic of a comic book or TV Martian...";
+$qs[88]="Name an occupation that begins with the letter \"B\"...";
+$qs[89]="Name something that gets in your eyes and stings them...";
+$qs[90]="Name a vehicle you can recognize by the sound it makes...";
+
+$ans[81]="Eye Color,Hair Color,Height,Nose,Heart Problems";
+$ans[82]="Police,Show Business,Physician,Truck Driver,Sales";
+$ans[83]="Dog,Car,Train,Siren,Cow";
+$ans[84]="Lifesavers,M & M,Taffy,Jellybeans,Lollipops";
+$ans[85]="Hot Dogs,Meat Loaf,Casserole,Macaroni,Hamburger";
+$ans[86]="Alps,Chocolate,Clocks,Cheese,Skiing";
+$ans[87]="Green Body,Antenna,Big Eyes,Pointy Ears,Big Head";
+$ans[88]="Baker,Barber,Bartender,Banker,Butcher";
+$ans[89]="Soap,Smoke,Onion Fumes,Dust,Chlorine";
+$ans[90]="Motorcycle,Car,Train,Airplane,Boat";
+
+$tgs[81]="Eye,Hair,Height*Tall,Nose,Heart";
+$tgs[82]="Police*Cop,Hollywood*Show Biz*Act*Celeb,Physician*Doc*Surgeon*Medic,Truck*Driver,Sales";
+$tgs[83]="Dog*Woof,Car*Vroom,Train*Chug*Choo,Siren*Cop*Police*Fire*Ambul,Cow*Moo";
+$tgs[84]="Savers,M&M*M & M*M and M*M-and-M*M-&-M,Taffy,Jelly*Bean,Loll*Sucker";
+$tgs[85]="Wiener*Weener*Dog,Loaf,Casser*Caser,Mac,Burger";
+$tgs[86]="Alp,Choc,Clock*Watch,Cheese,Ski";
+$tgs[87]="Green,Ante,Big Eyes*Large Eyes*Bug Eyes,Pointy,Big Head*Large Head";
+$tgs[88]="Bake,Barber,Bartend*Bar-tend*Bar tend,Bank,Butch";
+$tgs[89]="Soap*Sud,Smoke*Fire,Onion,Dust,Chlor*Clor";
+$tgs[90]="Motorcycle*Motorbike,Car,Train,Plane,Boat*Ship";
+
+$qs[91]="Name a place where you see more kids than adults...";
+$qs[92]="Name something that people use to pick a lock...";
+$qs[93]="Name something that Texas is famous for...";
+$qs[94]="Name a famous street anywhere in the world...";
+$qs[95]="Besides a bathing suit, name something people wear in the water...";
+$qs[96]="Name something that sound sleepers often sleep through...";
+$qs[97]="Name something that rises, besides the sun and the moon...";
+$qs[98]="Name a fruit you eat with a spoon...";
+$qs[99]="Name something that people spread...";
+$qs[100]="Give me a word or phrase you might hear in a courtroom during a trial...";
+
+$ans[91]="School,Park,Video Arcade,Amusement Park,Concerts";
+$ans[92]="Hairpin,Credit Card,File,Knife,Screwdriver";
+$ans[93]="Oil,The Alamo,Cattle,Cowboys,Football";
+$ans[94]="Broadway,Fifth Ave,Bourbon Street,Wall Street,Hollywood Blvd";
+$ans[95]="Goggles,Bathing Cap,Shorts,Wet Suit,Ear Plugs";
+$ans[96]="Storms,Alarm Clock,Phone Ringing,Siren,Earthquake";
+$ans[97]="Bread,Tide,Temperature,Balloon,Hot Air";
+$ans[98]="Grapefruit,Cantaloupe,Strawberries,Peaches,Blueberries";
+$ans[99]="Butter,Rumors,Germs,Peanut Butter,Jam";
+$ans[100]="Order,Objection,Guilty,Your Honor,Overruled";
+
+$tgs[91]="School,Park,Arcade,Amusement*Six Flags*Disney,Concert*Music";
+$tgs[92]="Hairpin*Hair pin*Hair-pin,Card,File,Knife,Screwdriver*Screw-driver*Screw driver";
+$tgs[93]="Oil,Alamo,Cattle*Cows*Ranch,Cowboy,Footbal";
+$tgs[94]="Broadway,Fifth*5th,Bourbon,Wall,Hollywood";
+$tgs[95]="Goggle,Cap,Short,Wet suit*Wetsuit*Wet-suit,Plug";
+$tgs[96]="Storm*Thunder*Lightning,Alarm,Phone,Siren*Police*Cop*Fire*Ambul,Quake";
+$tgs[97]="Bread*Dough,Tide*Ocean*Wave,Temp*Degree,Balloon,Hot air*Hotair*Hot-air";
+$tgs[98]="Grapefruit*Grape-fruit*Grape fruit,Canta*Melon*Mellon,Strawb,Peach,Blueb";
+$tgs[99]="Butter,Rumor*Gossip,Germ,Peanut*PB*P.B,Jam*Jelly";
+$tgs[100]="Order,Object,Guilt,Honor,Over ruled*Over-ruled*Overr";
+
+//practice:
+$pqs[1]="Name something fathers buy for their kids but play with themselves...";
+$pqs[2]="Name something that usually breaks when you drop it...";
+$pqs[3]="Name something at a house that uses a lot of water...";
+$pqs[4]="Name something people buy with the future in mind...";
+$pqs[5]="Name a breed of dog that you would describe as annoying...";
+$pqs[6]="Name a specific item that you have on the patio...";
+$pqs[7]="Name an expensive fabric...";
+$pqs[8]="Name something that people fight about with their next door neighbors...";
+$pqs[9]="Name a sport that is not regulated by a clock...";
+$pqs[10]="Name a kind of place that might have an information booth...";
+$pqs[11]="Name something you replace in your bathroom on a regular basis...";
+$pqs[12]="Name a place where you sit in an adjustable seat...";
+$pqs[13]="Name a reason for an office party...";
+$pqs[14]="Name a bird with legs that look long...";
+$pqs[15]="Name something you should take along with you on a fishing trip...";
+$pqs[16]="Besides pills, name a cure for headaches...";
+
+
+$pans[1]="Train Set,Video Games,Model Car,Kite,Computer";
+$pans[2]="Glass,China,Egg,Light Bulb,Mirror";
+$pans[3]="Washing Machine,Shower,Lawn,Dishwasher,Toilet";
+$pans[4]="House,Stocks,Insurance,Furniture,Car";
+$pans[5]="Chihuahua,Poodle,Pit Bull,Doberman Pinscher,Pekingese";
+$pans[6]="Barbecue,Chair,Table,Plant,Swing";
+$pans[7]="Silk,Velvet,Cashmere,Satin,Suede";
+$pans[8]="Pets,Noise,Property Line,Kids,Yard";
+$pans[9]="Baseball,Tennis,Golf,Bowling,Gymnastics";
+$pans[10]="Mall,Airport,Amusement Park,Hospital,Museum";
+$pans[11]="Toilet Paper,Towels,Soap,Tissues,Toothpaste";
+$pans[12]="Car,Airplane,Dentist's Office,Barber,Movie";
+$pans[13]="Christmas,Retirement,Birthday,Promotion,Going Away";
+$pans[14]="Ostrich,Flamingo,Stork,Crane,Heron";
+$pans[15]="Fishing Pole,Bait,Bug Spray,Food,Boots";
+$pans[16]="Sleep,Rest,Cold Compress,Massage,Hot Shower";
+
+$ptgs[1]="Train*Choo,Video*Arcade,Model*Car,Kite,Comp*PC*CPU";
+$ptgs[2]="Glass,China*Porc*Ceram,Egg,Light*Bulb,Mirr";
+$ptgs[3]="Laundry*Washing,Shower*Bath*Tub,Lawn*Yard*Grass,Dish,Toilet*Potty*John";
+$ptgs[4]="House*Home,Stock,Insur,Furniture*Sofa*Table*Chair*Couch,Car*Auto*Truck*Van";
+$ptgs[5]="Chi,Poodle,Bull,Dober*Pinscher*Pincher,Pek";
+$ptgs[6]="BBQ*Barb*Grill,Chair,Table,Plant,Swing";
+$ptgs[7]="Silk,Velvet,Cashm*Caz,Satin*Sateen,Suede*Seude*Leather";
+$ptgs[8]="Pet*Dog*Cat,Nois*Loud,Property*Fence*Border*Line,Kid*Child,Yard*Grass*Lawn";
+$ptgs[9]="Base,Tenn,Golf,Bowl,Gymn";
+$ptgs[10]="Mall,Airp,Amusement,Hosp*Doc,Museum*Musuem";
+$ptgs[11]="TP*Paper,Towel,Soap,Tissue,Toothpast";
+$ptgs[12]="Car,Plane,Dentist,Barb*Hair*Salon,Movie*Cin*Theat";
+$ptgs[13]="Christ*Xmas,Retire*Quit*Leav,Birth*Bday,Promot*Raise,Voyage*Away";
+$ptgs[14]="Ostr,Flamin,Stork,Crane*Crain,Heron*Herin*Herron";
+$ptgs[15]="Pole,Bait*Bate*Worm,Repel*Bug*Spray,Food*Eat*Snack,Boot*Golash*Galosh*Wade*Shoe";
+$ptgs[16]="Sleep*Nap,Rest,Comp*Ice*Cold,Massage*Masage,Shower*Bath*Soak";
+
+
+

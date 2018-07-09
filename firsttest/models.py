@@ -10,7 +10,7 @@ import csv
 author = 'Patrick Betz'
 
 doc = """
-Parallel Family Feud
+Parallel Family Feud with oTree + otree-redwood
 """
 
 
