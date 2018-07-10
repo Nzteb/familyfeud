@@ -203,7 +203,7 @@ class Group(RedwoodGroup):
                     finished =  all([self.s1_answered , self.s2_answered, self.s3_answered, self.s4_answered, self.s5_answered])
 
                     # send informations back to javascript, this activates 'instructions_after_guess()'
-                    self.send('guessInformations', {'guess': question[answernum][0], # send the exactly correct answer back, which is the 0 element of the list
+                    self.send('guessInformations', {'guess': question[answernum][0], #send the exactly correct answer back, which is the 0 element of the list
                                                     'whichword': answernum,
                                                     'idInGroup': player_id_in_group,
                                                     'correct': True,
