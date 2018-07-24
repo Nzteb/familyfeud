@@ -84,6 +84,8 @@
     }
 
 
+    var group_points = 0;
+    var player_points = 0;
     // Receives information over channel from 'on_guessingChannel_event' in oTree after the guess is processed there
     // Takes all the desired actions
     document.getElementById('guessInformations').addEventListener('event', instructions_after_guess)
@@ -96,7 +98,6 @@
             correctguess.textContent = event.detail.payload.guess
             //color the background green
             correctguess.style.background = 'linear-gradient(lightgreen, limegreen)'
-
 
             // display message about the guess for all players on message board
             var node = document.createElement("Li");
@@ -115,10 +116,18 @@
             var scrollme = document.getElementById('aroundguesslist');
             scrollme.scrollTop = scrollme.scrollHeight;
 
-            // if the player is the who guessed correctly, tell him good job
+            //increment group points
+            group_points += 1;
+            document.getElementById('group_points').textContent = "Group points: " + group_points
+
+            // if the player is the who guessed correctly, tell him good job, increment his points
             if (oTree.idInGroup == event.detail.payload.idInGroup){
-                var message = document.getElementById('message')
-                message.textContent = 'That was correct. Good job!'
+                var message = document.getElementById('message');
+                message.textContent = 'That was correct. Good job!';
+                // increment player points
+                player_points += 1;
+                document.getElementById('player_points').textContent = "Your points: " + player_points
+
             }
 
             // all words have been found, still, wait until the time is up, so the overall timing stays consistent
@@ -156,12 +165,12 @@
     }
 
 
-    //sending a new question to from oTree to the players
+    // sending a new question from oTree to the players
     // initializing the 40 + 5 seconds round of a question
     document.getElementById('questionChannel').addEventListener('event', receive_question);
     function receive_question(event){
 
-        //if multiple family feud subrounds (more then 1 question) are played turn shown solutions to placeholders again
+        // if multiple family feud subrounds (more then 1 question) are played turn the shown solutions to placeholders again
         var s1 =  document.getElementById('s1');
         s1.textContent = 'Word 1'
         s1.style.background = 'linear-gradient(lightyellow,yellow)'
@@ -185,10 +194,10 @@
         var questiontag = document.getElementById('question')
         questiontag.textContent = event.detail.payload.question
 
-        //enable submitt button
+        // enable submitt button
         document.getElementById("subbutton").disabled = false;
 
-        //activate the round
+        // activate the round
         currtime = new Date().getTime()
         stoptime = currtime + (oTree.secsPerQuestion*1000)
         run_round(event,stoptime)
@@ -196,20 +205,20 @@
     }
 
     function run_round(anevent, stoptime){
-        //start the timer
+        // start the timer
        currtime = new Date().getTime();
        n = Math.floor((stoptime - currtime)/1000);
        document.getElementById('timer').textContent = 'Time left: ' + parseInt(n);
        // call function again every second until the time is up
        if(n > 0 ) {
            setTimeout( function() {run_round(anevent, stoptime);},1000)
-       //time is up
+       // time is up
        }else {
-           // disable the submitt button, so players cannot guess when the will be shown
+           // disable the submitt button, so players cannot guess when the answers are shown
            document.getElementById("subbutton").disabled = true;
            // display results
            setTimeout(function () {display_all(anevent);}, 100);
-           document.getElementById('timer').textContent = 'Round done, please wait a moment ...'
+           document.getElementById('message').textContent = 'Round done, please wait a moment ...'
 
        }
     }
@@ -235,27 +244,28 @@
         s5.textContent = anevent.detail.payload.s5[0]
         s5.style.background = 'linear-gradient(lightgreen, limegreen)'
 
-        //check if there is a question left otherwise go to the next page in oTree
+        // check if there is a question left otherwise go to the next page in oTree
         if (questions_left == 0){
             // family feud finished, wait and submitt page
             setTimeout( function(){ submitt_nextbutton();}, oTree.waitBetween*1000)
         }else{
-            //wait 'waitBetween' seconds and then let the first player in the group request oTree to send another question
+            // wait 'waitBetween' seconds and then let the first player in the group request oTree to send another question
             setTimeout( function() {request_question();}, oTree.waitBetween*1000)
         }
         questions_left -= 1
     }
 
-    //this will abort the game and move to the next oTree page is called from display_all()
+    // this will abort the game and move to the next oTree page is called from display_all()
     function submitt_nextbutton(){
         document.getElementById('next').click()
     }
 
-    //if you play more then 1 question in a family feud subround
+    // if you play more then 1 question in a family feud subround
     function request_question(){
+        // the first player in the group requests the new question bundle
         if (oTree.idInGroup == 1){
         var questionChan = document.getElementById("questionChannel");
-        //send to Otree, so otree sends a question back to 'receive_question', this activates a new round
+        // send to Otree, so otree sends a question back to 'receive_question', this activates a new round
         questionChan.send({some:'load'})
         }
     }
@@ -323,6 +333,9 @@
             border-color: black;
             border:1px dashed;
             background-color: white;
+            color : blue;
+            font-weight: bolder;
+
         }
 
         #questionboard{
@@ -398,8 +411,11 @@
           <div id="middle">
 
 
-              <p id="timer" style="padding-top:5px;padding-left: 10px">Time left:</p>
-              <br>
+              <p id="timer" style="padding-top:5px;padding-left: 60px; display: inline; color:blue">Time left:</p>
+              <p id="player_points" style="padding-top:5px;padding-left: 70px;display: inline;color:blue">Your points: 0</p>
+              <p id="group_points" style="padding-top:5px;padding-left: 70px; display: inline;color:blue">Group points: 0</p>
+
+              <br><br>
 
               <div id="centerthis">
 
@@ -418,14 +434,12 @@
 
 
                   <!-- Messageboard -->
-                  <br>
                   <div id="messageboard">
                       <p id='message' style=" padding-top:15px; text-align: center">Load message board....</p>
                   </div>
 
 
                   <div id="aroundfieldbutton">
-                        <br>
                         <!-- Input form -->
                         <input id='guessfield' type='text' maxlength='25' placeholder="Guess a word!">
                         <br><br>

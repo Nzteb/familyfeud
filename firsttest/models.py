@@ -25,7 +25,7 @@ class Constants(BaseConstants):
     with open('data.csv') as f:
         questions = list(csv.reader(f))
 
-    # Questions comes as a list and will be formatted in a list of dics in creating session
+    # Questions come as a list and will be formatted in a list of dics in creating session
     # Example format how to deal with questions in the code:
     # (The respective first answer is the desired answer, which will be displayed)
     # quizload = [
@@ -49,7 +49,6 @@ class Subsession(BaseSubsession):
 
             quizload = []
             # Format question data into quizload
-            # TODO: Looping over a list of about 100 before the session starts should be fine right..
             for question in Constants.questions:
                 quizload.append({'question': question[0],
                                  's1': question[1].split('*'),
@@ -81,7 +80,7 @@ class Group(RedwoodGroup):
     s3_answered = models.BooleanField()
     s4_answered = models.BooleanField()
     s5_answered = models.BooleanField()
-    group_points = models.IntegerField(initial=0)
+    group_ff_points = models.IntegerField(initial=0)
     question_sequence = models.CharField(initial='')
 
 
@@ -137,8 +136,8 @@ class Group(RedwoodGroup):
         #send a new question back
         self.sendquizload_toplayers()
 
-    # reveives all the guesses of the players, decides if guess was right and shall calculate points
-    # also checks if a correct guess has been found already, so no points are distributed
+    # reveives all the guesses of the players, decides if guess was right and shall calculate ff_points
+    # also checks if a correct guess has been found already, so no ff_points are distributed
     # sends processed information back to the players in javascript
     def _on_guessingChannel_event(self, event=None):
         #TODO Delete me
@@ -168,14 +167,14 @@ class Group(RedwoodGroup):
             # e. g. question[s1] is a list with all the solutions for the correct word 1 of the current question
             if guess in list(map(lambda x: x.lower(), question[answernum])): #guess is correct
                 good_guess = True
-                # only take action and distribute points if the correct answer has not been guessed before
+                # only take action and distribute ff_points if the correct answer has not been guessed before
                 if [self.s1_answered , self.s2_answered, self.s3_answered, self.s4_answered, self.s5_answered][questionindex] != True:
 
                     # give the player a point (save() is called in the function)
-                    player.inc_points()
+                    player.inc_ff_points()
 
                     # give the group a point
-                    self.group_points += 1
+                    self.group_ff_points += 1
                     self.save()
 
                     # update, so that the question cannot be answered again
@@ -216,7 +215,7 @@ class Group(RedwoodGroup):
                 #TODO: note: with that design choice, if a question is answered correctly for the second time, just nothing happens
                 #TODO: there will be also nothing displayed in the group guess message board
                 # guess was correct, but that correct guess was already made before
-                # do nothing, dont send anything out, dont distribute points
+                # do nothing, dont send anything out, dont distribute ff_points
                 else:
                     pass
                 #we can break here, because this is the space where the guess was correct, so then no other of the answers has to be checked
@@ -245,7 +244,7 @@ class Player(BasePlayer):
         guess_sequence = models.CharField(initial='')
 
         # number of correctly answered questions
-        points = models.IntegerField(initial=0)
+        ff_points = models.IntegerField(initial=0)
 
         # number of tries (guesses) of a player
         num_guesses = models.IntegerField(initial=0)
@@ -255,8 +254,8 @@ class Player(BasePlayer):
             self.save()
 
 
-        def inc_points(self):
-            self.points += 1
+        def inc_ff_points(self):
+            self.ff_points += 1
             self.save()
 
 
