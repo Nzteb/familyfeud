@@ -9,7 +9,7 @@
   <script>
 
     // Stackoverflow:
-    //this prevents that pressing enter will automatically submitt the page and abort the game for a player
+    //this prevents that pressing enter will automatically submit the page and abort the game for a player
     $(document).on("keypress", 'form', function (e) {
     var code = e.keyCode || e.which;
     console.log(code);
@@ -21,7 +21,7 @@
 });
 
     //Stackoverflow:
-    // Make pressing enter to submitt the guess
+    // Make pressing enter to submit the guess
     //TODO this might be blocked from the above code?
     document.getElementById("guessfield")
     .addEventListener("keyup", function(event) {
@@ -59,11 +59,11 @@
 
 
 
-    // Call the handle Guess function when the submitt button is clicked
+    // Call the handle Guess function when the submit button is clicked
     var subButton = document.getElementById('subbutton');
     subButton.addEventListener('click', handleGuess);
 
-    //This function is called when the submitt button is clicked
+    //This function is called when the submit button is clicked
     // It sends the guess over the guessing Channel to otree, therefore on_guessingchannel_event is called
     function handleGuess() {
         //grap the input of the input form as a variable
@@ -194,7 +194,7 @@
         var questiontag = document.getElementById('question')
         questiontag.textContent = event.detail.payload.question
 
-        // enable submitt button
+        // enable submit button
         document.getElementById("subbutton").disabled = false;
 
         // activate the round
@@ -214,7 +214,7 @@
            setTimeout( function() {run_round(anevent, stoptime);},1000)
        // time is up
        }else {
-           // disable the submitt button, so players cannot guess when the answers are shown
+           // disable the submit button, so players cannot guess when the answers are shown
            document.getElementById("subbutton").disabled = true;
            // display results
            setTimeout(function () {display_all(anevent);}, 100);
@@ -246,8 +246,8 @@
 
         // check if there is a question left otherwise go to the next page in oTree
         if (questions_left == 0){
-            // family feud finished, wait and submitt page
-            setTimeout( function(){ submitt_nextbutton();}, oTree.waitBetween*1000)
+            // family feud finished, wait and submit page
+            setTimeout( function(){ submit_nextbutton();}, oTree.waitBetween*1000)
         }else{
             // wait 'waitBetween' seconds and then let the first player in the group request oTree to send another question
             setTimeout( function() {request_question();}, oTree.waitBetween*1000)
@@ -256,7 +256,7 @@
     }
 
     // this will abort the game and move to the next oTree page is called from display_all()
-    function submitt_nextbutton(){
+    function submit_nextbutton(){
         document.getElementById('next').click()
     }
 
@@ -443,8 +443,8 @@
                         <!-- Input form -->
                         <input id='guessfield' type='text' maxlength='25' placeholder="Guess a word!">
                         <br><br>
-                        <!-- Button submitt input  -->
-                        <button id='subbutton' type='button'>Submitt your guess</button>
+                        <!-- Button submit input  -->
+                        <button id='subbutton' type='button'>submit your guess</button>
                   </div>
 
               </div>

@@ -103,7 +103,7 @@ SESSION_CONFIG_DEFAULTS = {
 SESSION_CONFIGS = [
     {
         'name': 'firsttest',
-        'display_name': 'firsttestme',
+        'display_name': 'Family Feud',
         'num_demo_participants': 2,
         'app_sequence': ['firsttest'],
     }
