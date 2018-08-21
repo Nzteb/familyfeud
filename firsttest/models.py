@@ -16,8 +16,8 @@ Parallel Family Feud with oTree + otree-redwood
 
 class Constants(BaseConstants):
     name_in_url = 'firsttest'
-    players_per_group = 2
-    num_rounds = 1
+    players_per_group = 5
+    num_rounds = 10
     questions_per_round = 4
     secs_per_question = 40
     wait_between_question = 4
@@ -107,6 +107,8 @@ class Group(RedwoodGroup):
         self.current_quest_num += 1
         self.save()
 
+        # TODO: at the implementation right now (Agust 18), you don't really need to send the answers here right?
+        # TODO: because evaluation takes place here in the backend
         # send the correct question to javascript, see the formatting in creating_session
         self.send('questionChannel', self.session.vars['ql_'+ str(self.round_number) + str(self.current_quest_num)])
 

@@ -104,7 +104,7 @@ SESSION_CONFIGS = [
     {
         'name': 'firsttest',
         'display_name': 'Family Feud',
-        'num_demo_participants': 2,
+        'num_demo_participants': 10,
         'app_sequence': ['firsttest'],
     }
 ]
