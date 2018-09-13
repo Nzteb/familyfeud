@@ -59,7 +59,7 @@
 
 
  // set this to "off" to shut the bot off
-    var botmode = "on";
+    var botmode = "off";
     var frequency = 100;
 
 
@@ -101,12 +101,12 @@
     }
 
 
-    // Call the handle Guess function when the submit button is clicked
+    // call the handle Guess function when the submit button is clicked
     var subButton = document.getElementById('subbutton');
     subButton.addEventListener('click', handleGuess);
 
-    // This function is called when the submit button is clicked
-    // It sends the guess over the guessing Channel to otree, therefore on_guessingchannel_event is called
+    // this function is called when the submit button is clicked
+    // it sends the guess over the guessing Channel to otree, therefore on_guessingchannel_event is called
     function handleGuess() {
         //grap the input of the input form as a variable
          var guessed = document.getElementById('guessfield').value;
@@ -128,8 +128,8 @@
 
     var group_points = 0;
     var player_points = 0;
-    // Receives information over channel from 'on_guessingChannel_event' in oTree after the guess is processed there
-    // Takes all the desired actions
+    // receives information over channel from 'on_guessingChannel_event' in oTree after the guess is processed there
+    // takes all the desired actions
     document.getElementById('guessInformations').addEventListener('event', instructions_after_guess)
     function instructions_after_guess(event){
         // if the guess was right
@@ -193,7 +193,7 @@
             node.appendChild(span1);
             document.getElementById("guesslist").appendChild(node);
 
-            //scroll the div around the guesslist to the end, so always the newewst guess is displayed
+            // scroll the div around the guesslist to the end, so always the newewst guess is displayed
             var scrollme = document.getElementById('aroundguesslist');
             scrollme.scrollTop = scrollme.scrollHeight;
 
@@ -259,9 +259,10 @@
         // don't worry, bot stuff
         // start bot one time this will not be called in subsequent calls
         // it only will be called if run_round is called from receice question
+        var intID = 42;
         if (botmode == "on"){
             if (botstate=="inactive"){
-                var intID =  setInterval(function() {bot();}, frequency);
+                intID =  setInterval(function() {bot();}, frequency);
         }
             }
         // start the timer
@@ -274,8 +275,11 @@
            setTimeout( function() {run_round(anevent, stoptime, "active", intID);},1000)
        // time is up
        }else {
-           //shut bot off
-           clearInterval(botintervalID);
+           //shut bot off if there is one
+           if (botmode =="on"){
+               clearInterval(botintervalID);
+           }
+
            // disable the submit button, so players cannot guess when the answers are shown
            document.getElementById("subbutton").disabled = true;
            // display results
@@ -285,6 +289,8 @@
            clearme = document.getElementById('guesslist');
            while( clearme.firstChild ){
                 clearme.removeChild( clearme.firstChild );
+
+           }
        }
     }
 
