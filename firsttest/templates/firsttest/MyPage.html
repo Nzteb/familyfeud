@@ -446,26 +446,26 @@
             height: 90%;
         }
 
-        #messageboard {
-            margin: 0 auto;
-            width: 70%;
-            padding-left: 5px;
-            padding-right: 5px;
-            height: 70px;
-            border-radius: 10px;
-            border-color: black;
-            border:1px dashed;
-            background-color: white;
-            color : blue;
-            font-weight: bolder;
+{#        #messageboard {#}
+{#            margin: 0 auto;#}
+{#            width: 70%;#}
+{#            padding-left: 5px;#}
+{#            padding-right: 5px;#}
+{#            height: 70px;#}
+{#            border-radius: 10px;#}
+{#            border-color: black;#}
+{#            border:1px dashed;#}
+{#            background-color: white;#}
+{#            color : blue;#}
+{#            font-weight: bolder;#}
 
-        }
+
 
         #questionboard{
             padding-left:5px;
             padding-right:5px;
             border-radius: 15px;
-            height: 80px;
+            height: 120px;
             border-color: black;
             border:1px dashed;
             margin-bottom: 20px;
@@ -542,11 +542,20 @@
 
               <div id="centerthis">
 
-                  <!-- Display the question -->
+                  <!-- Question Board -->
+                  <br>
                   <div id="questionboard" >
+                    <div style="height: 45px">
                     <p id="question" style="padding-top: 15px; text-align: center">Prepare for the first question ...</p>
-                  </div>
+                    </div>
+                      <!-- Messageboard -->
 
+                      <div style="border-top:lightgrey solid; padding-top: 15px; margin-top: 20px ">
+                      <p id='message' style="font-size:16px;color:blue;text-align: center">Load message board....</p>
+                      </div>
+
+
+                  </div>
 
                   <!-- Word placeholders in middle-->
                   <p id='s1' style="text-align:center;border-radius: 5px;background:linear-gradient(lightyellow, yellow); border:1px; border-style:solid; padding-left: 6px";>Word is loaded ...</p>
@@ -556,10 +565,7 @@
                   <p id='s5' style="text-align:center;border-radius: 5px;background:linear-gradient(lightyellow, yellow);border:1px; border-style:solid; padding-left: 6px";>Word is loaded ...</p>
 
 
-                  <!-- Messageboard -->
-                  <div id="messageboard">
-                      <p id='message' style=" padding-top:15px; text-align: center">Load message board....</p>
-                  </div>
+
 
 
                   <div id="aroundfieldbutton">
