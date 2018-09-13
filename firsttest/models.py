@@ -6,6 +6,7 @@ from otree.api import (
 from otree_redwood.models import Group as RedwoodGroup
 import random
 import csv
+import difflib as dif
 
 author = 'Patrick Betz'
 
@@ -17,9 +18,9 @@ Parallel Family Feud with oTree + otree-redwood
 class Constants(BaseConstants):
     name_in_url = 'firsttest'
     players_per_group = 5
-    num_rounds = 10
-    questions_per_round = 4
-    secs_per_question = 40
+    num_rounds = 1
+    questions_per_round = 3
+    secs_per_question = 30
     wait_between_question = 4
 
     with open('data.csv') as f:
@@ -98,8 +99,6 @@ class Group(RedwoodGroup):
     # the function is called at the beginning from when_all_players_ready and under multiple questions when requested from a player through questionChannel
     def sendquizload_toplayers(self):
 
-        #TODO delete me
-        print('I WANTED to send quizload')
 
         # increment the current question number
         # TODO: You need save() for all database operations ingame, otherwise the changes have no effect on the database
@@ -167,8 +166,19 @@ class Group(RedwoodGroup):
         # check if the guess is correct, if yes and not answered correctly before, send respective information back to javascript
         for answernum in ['s1', 's2', 's3', 's4', 's5']:
             # e. g. question[s1] is a list with all the solutions for the correct word 1 of the current question
-            if guess in list(map(lambda x: x.lower(), question[answernum])): #guess is correct
+            if guess in list(map(lambda x: x.lower(), question[answernum])):  # guess is correct
                 good_guess = True
+
+            # if the guess was not in the answerlist, check for string similarity
+            if good_guess == False:
+                for answer in question[answernum]:
+                    match = dif.SequenceMatcher(a=guess, b=answer.lower())
+                    # TODO delete me (print)
+                    print(guess + " and " + answer.lower() + " have string equality of: " + str(match.ratio()))
+                    if match.ratio() > 0.75:
+                        good_guess = True
+
+            if good_guess == True:
                 # only take action and distribute ff_points if the correct answer has not been guessed before
                 if [self.s1_answered , self.s2_answered, self.s3_answered, self.s4_answered, self.s5_answered][questionindex] != True:
 
@@ -223,7 +233,6 @@ class Group(RedwoodGroup):
                 #we can break here, because this is the space where the guess was correct, so then no other of the answers has to be checked
                 break
             questionindex+=1
-
 
         # guess was not correct, send respective informations back
         if good_guess == False:

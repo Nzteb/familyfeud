@@ -58,17 +58,17 @@
     })();
 
 
-    //  this is the bot .. shut this off
+ // set this to "off" to shut the bot off
+    var botmode = "on";
+    var frequency = 100;
 
 
+    // for bot, is filled with the correct answers below
     var a1 = "Answer1";
     var a2 = "Answer2";
     var a3 = "Answer3";
     var a4 = "Answer4";
     var a5 = "Answer5";
-
-
-    setInterval(bot,1000)
 
     function bot(){
 
@@ -86,22 +86,19 @@
 
 
          guessed.placeholder = answers[answeridx];
-         guessed.value = answers[answeridx] ;
+         guessed.value = answers[answeridx];
 
          }else{
 
               for (var i = 0; i < 5; i++){
-         text += possible.charAt(Math.floor(Math.random() * possible.length));
-         }
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
 
          guessed.placeholder = text;
          guessed.value = text;
-
          }
          handleGuess();
     }
-
-    // bot end..
 
 
     // Call the handle Guess function when the submit button is clicked
@@ -216,7 +213,7 @@
     function receive_question(event){
 
 
-        //atm the answers here are only needed for the bot. The design is that after a correct guess the correct guess is sended from oTree.
+        // atm the answers here are only needed for the bot. The design is that after a correct guess the correct guess is sended from oTree.
         a1 = event.detail.payload.s1[0];
         a2 = event.detail.payload.s2[0];
         a3 = event.detail.payload.s3[0];
@@ -254,31 +251,46 @@
         // activate the round
         currtime = new Date().getTime()
         stoptime = currtime + (oTree.secsPerQuestion*1000)
-        run_round(event,stoptime)
+        run_round(event,stoptime,"inactive", "none")
     }
 
-    function run_round(anevent, stoptime){
+    function run_round(anevent, stoptime, botstate, botintervalID){
+
+        // don't worry, bot stuff
+        // start bot one time this will not be called in subsequent calls
+        // it only will be called if run_round is called from receice question
+        if (botmode == "on"){
+            if (botstate=="inactive"){
+                var intID =  setInterval(function() {bot();}, frequency);
+        }
+            }
         // start the timer
        currtime = new Date().getTime();
        n = Math.floor((stoptime - currtime)/1000);
        document.getElementById('timer').textContent = 'Time left: ' + parseInt(n);
        // call function again every second until the time is up
+
        if(n > 0 ) {
-           setTimeout( function() {run_round(anevent, stoptime);},1000)
+           setTimeout( function() {run_round(anevent, stoptime, "active", intID);},1000)
        // time is up
        }else {
+           //shut bot off
+           clearInterval(botintervalID);
            // disable the submit button, so players cannot guess when the answers are shown
            document.getElementById("subbutton").disabled = true;
            // display results
            setTimeout(function () {display_all(anevent);}, 100);
-           document.getElementById('message').textContent = 'Round done, please wait a moment ...'
-
+           document.getElementById('message').textContent = 'Round done, please wait a moment ...';
+           // emtpy guesslist
+           clearme = document.getElementById('guesslist');
+           while( clearme.firstChild ){
+                clearme.removeChild( clearme.firstChild );
        }
     }
 
     var questions_left = oTree.questionsPerRound - 1;
-    //this is called from 'receive_question' 40 seconds after a question is displayed
-    //TODO 02.012 ok and then after this wait 5 seconds and send next question to do this again basically
+    // this is called from 'receive_question' 40 seconds after a question is displayed
+    // TODO 02.012 ok and then after this wait 5 seconds and send next question to do this again basically
     function display_all(anevent){
 
         var s1 =  document.getElementById('s1');
@@ -322,6 +334,7 @@
         questionChan.send({some:'load'})
         }
     }
+
 
 
 

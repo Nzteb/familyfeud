@@ -15,13 +15,20 @@ if environ.get('OTREE_PRODUCTION') not in {None, '', '0'}:
 else:
     DEBUG = True
 
+DEBUG = False
+AUTH_LEVEL = 'DEMO'    
+
 ADMIN_USERNAME = 'admin'
 
 # for security, best to set admin password in an environment variable
-ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
+ADMIN_PASSWORD = "root"
 
 # don't share this with anybody.
 SECRET_KEY = 'a3noa)cdv5^wpk$rqu!#jliqxtgw5s$9u(rqk_1j^0s6@!$97s'
+
+
+environ['DATABASE_URL'] = 'postgres://postgres@localhost/django_db'
+
 
 DATABASES = {
     'default': dj_database_url.config(
@@ -37,6 +44,7 @@ DATABASES = {
         default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
     )
 }
+
 
 # AUTH_LEVEL:
 # If you are launching a study and want visitors to only be able to
@@ -104,7 +112,7 @@ SESSION_CONFIGS = [
     {
         'name': 'firsttest',
         'display_name': 'Family Feud',
-        'num_demo_participants': 10,
+        'num_demo_participants': 5,
         'app_sequence': ['firsttest'],
     }
 ]
