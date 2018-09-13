@@ -19,8 +19,8 @@ class Constants(BaseConstants):
     name_in_url = 'firsttest'
     players_per_group = 5
     num_rounds = 1
-    questions_per_round = 3
-    secs_per_question = 30
+    questions_per_round = 2
+    secs_per_question = 60
     wait_between_question = 4
 
     with open('data.csv') as f:
@@ -59,6 +59,7 @@ class Subsession(BaseSubsession):
                                  's5': question[5].split('*'), })
 
             questions_per_round = Constants.questions_per_round
+            random.seed(42)
 
 
             for round_num in range(1,Constants.num_rounds+1):
