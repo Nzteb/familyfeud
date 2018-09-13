@@ -50,6 +50,7 @@
       oTree.secsPerQuestion = {{ Constants.secs_per_question }}
       oTree.waitBetween = {{ Constants.wait_between_question }}
       oTree.questionsPerRound = {{ Constants.questions_per_round }}
+      oTree.extra_questions = {{ Constants.extra_questions }}
       {% if view.is_debug %}
       oTree.debug = true;
       {% else %}
@@ -211,7 +212,8 @@
         }
     }
 
-
+    var bonus_seconds = 0;
+    var curr_quest = 1;
     // sending a new question from oTree to the players
     // initializing the 40 + 5 seconds round of a question
     document.getElementById('questionChannel').addEventListener('event', receive_question);
@@ -238,17 +240,17 @@
         s3.style.background = 'linear-gradient(lightyellow,yellow)'
         var s4 =  document.getElementById('s4');
         s4.textContent = 'Word 4'
-        s4.style.background = 'linear-gradient(lightyellow,yellow)'
+        s4.style.background = 'linear-gradient(lightyellow,yellow)';
         var s5 =  document.getElementById('s5');
-        s5.textContent = 'Word 5'
-        s5.style.background = 'linear-gradient(lightyellow,yellow)'
+        s5.textContent = 'Word 5';
+        s5.style.background = 'linear-gradient(lightyellow,yellow)';
 
         // send to message board
-        document.getElementById('message').textContent = "Let's go. Type your guess in the field below!"
+        document.getElementById('message').textContent = "Let's go. Type your guess in the field below!";
 
         // display question
-        var questiontag = document.getElementById('question')
-        questiontag.textContent = event.detail.payload.question
+        var questiontag = document.getElementById('question');
+        questiontag.textContent = event.detail.payload.question;
 
         // enable submit button
         document.getElementById("subbutton").disabled = false;
@@ -257,10 +259,17 @@
 
         // new round, set answered early to false
         answered_early = false;
-        currtime = new Date().getTime()
-        stoptime = currtime + (oTree.secsPerQuestion*1000)
+        currtime = new Date().getTime();
+
+        if (curr_quest <= oTree.questionsPerRound){
+            var stoptime = currtime + (oTree.secsPerQuestion*1000);
+        }else{
+             var stoptime = currtime + (bonus_seconds*1000);
+        }
         run_round(event,stoptime,"inactive", "none")
     }
+
+
 
     function run_round(anevent, stoptime, botstate, botintervalID){
 
@@ -271,18 +280,32 @@
         if (botmode == "on"){
             if (botstate=="inactive"){
                 intID =  setInterval(function() {bot();}, frequency);
-        }
-            }
+        }}
         // update timer
        currtime = new Date().getTime();
        n = Math.floor((stoptime - currtime)/1000);
-       document.getElementById('timer').textContent = 'Time left: ' + parseInt(n);
+       if (n<10){
+           document.getElementById('timer').textContent = 'Time left: 0' + parseInt(n);
+       }else{
+           document.getElementById('timer').textContent = 'Time left: ' + parseInt(n);
+       }
 
+       // goup has all answers before the time is up
        if (answered_early==true){
 
+           // current question is a bonus question
+           if (curr_quest > oTree.questionsPerRound){
+               // determine the remaining bonus seconds
+               bonus_seconds = n;
+           // current question is a normal question
+           }else{
+
+               // accumulate the bonus questions
+               bonus_seconds = bonus_seconds + n;
+           }
            document.getElementById('message').textContent = 'You got all! Great.';
 
-            // emtpy guesslist
+           // emtpy guesslist
            clearme = document.getElementById('guesslist');
            while(clearme.firstChild ){
                 clearme.removeChild(clearme.firstChild);
@@ -291,8 +314,7 @@
            // you have to use display_all to keep the cycle consistent as this will either end the game or call request_question()
            display_all(anevent);
 
-
-       // call yourself every second to keep the round going
+       // round keeps going, call yourself recursively
        }else if(n > 0 ) {
            setTimeout( function() {run_round(anevent, stoptime, "active", intID);},1000)
 
@@ -301,6 +323,10 @@
            // shut bot off if there is one
            if (botmode =="on"){
                clearInterval(botintervalID);
+           }
+           // for bonus question time is now finally up
+           if (curr_quest > oTree.questionsPerRound) {
+               bonus_seconds = 0;
            }
 
            // disable the submit button, so players cannot guess when the answers are shown
@@ -316,9 +342,8 @@
        }
     }
 
-    var questions_left = oTree.questionsPerRound - 1;
-    // this is called from 'run_round' 40 seconds after a question is displayed
-    // TODO 02.012 ok and then after this wait 5 seconds and send next question to do this again basically
+
+    // called from run_round()
     function display_all(anevent){
 
         var s1 =  document.getElementById('s1');
@@ -338,22 +363,26 @@
         s5.style.background = 'linear-gradient(lightgreen, limegreen)'
 
         // check if there is a question left otherwise go to the next page in oTree
-        if (questions_left == 0){
+        if ((curr_quest >= oTree.questionsPerRound) && (bonus_seconds < 1)) {
             // family feud finished, wait and submit page
-            setTimeout( function(){ submit_nextbutton();}, oTree.waitBetween*1000)
+            setTimeout(function () {submit_nextbutton();}, oTree.waitBetween * 1000);
+
+        }else if ( curr_quest == oTree.questionsPerRound + oTree.extra_questions ) {
+            // family feud finished, wait and submit page
+            setTimeout(function () {submit_nextbutton();}, oTree.waitBetween * 1000);
         }else{
-            // wait 'waitBetween' seconds and then let the first player in the group request oTree to send another question
-            setTimeout( function() {request_question();}, oTree.waitBetween*1000)
+            // wait 'waitBetween' seconds and then let the first player in the group tell oTree to send another question
+            setTimeout( function() {request_question();}, oTree.waitBetween*1000);
         }
-        questions_left -= 1
+        curr_quest += 1;
     }
 
-    // this will abort the game and move to the next oTree page is called from display_all()
+    // called from display_all()
     function submit_nextbutton(){
-        document.getElementById('next').click()
+        document.getElementById('next').click();
     }
 
-    // if you play more then 1 question in a family feud subround
+    // if you play more then 1 question
     function request_question(){
         // the first player in the group requests the new question bundle
         if (oTree.idInGroup == 1){

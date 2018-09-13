@@ -19,8 +19,9 @@ class Constants(BaseConstants):
     name_in_url = 'firsttest'
     players_per_group = 5
     num_rounds = 1
-    questions_per_round = 2
-    secs_per_question = 60
+    questions_per_round = 3
+    extra_questions = 3
+    secs_per_question = 30
     wait_between_question = 4
 
     with open('data.csv') as f:
@@ -59,12 +60,15 @@ class Subsession(BaseSubsession):
                                  's5': question[5].split('*'), })
 
             questions_per_round = Constants.questions_per_round
-            random.seed(42)
+            extra_questions = Constants.extra_questions
 
 
             for round_num in range(1,Constants.num_rounds+1):
-                    for question_num in range(1,questions_per_round+1):
-                        question = random.choice(quizload)
+                    for question_num in range(1,questions_per_round+ + extra_questions +1):
+
+                        # use this for random choice of questions
+                        #question = random.choice(quizload)
+                        question = quizload[0]
                         quizload.remove(question)
                         # Save the quizload of the question in session.vars to access later
                         # ql_11 e.g. means quizload for round 1 question 1
@@ -108,7 +112,7 @@ class Group(RedwoodGroup):
         self.save()
 
         # TODO: at the implementation right now (Agust 18), you don't really need to send the answers here right?
-        # TODO: because evaluation takes place here in the backend
+        # TODO: because evaluation takes place here in the backend anyway
         # send the correct question to javascript, see the formatting in creating_session
         self.send('questionChannel', self.session.vars['ql_'+ str(self.round_number) + str(self.current_quest_num)])
 
